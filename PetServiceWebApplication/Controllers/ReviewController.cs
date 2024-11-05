@@ -37,10 +37,8 @@ public class ReviewController : Controller
         var reviews = await
         (
             from review in _context.Reviews
-            join service in _context.Services
-                on review.ServiceId equals service.Id
             join petServiceProvider in _context.PetServiceProviders
-                on service.ProviderId equals petServiceProvider.Id
+                on review.PetServiceProviderId equals petServiceProvider.Id
             where petServiceProvider.Id == ProviderId
             select review
         ).ToListAsync();
@@ -75,12 +73,12 @@ public class ReviewController : Controller
             return BadRequest(ModelState);
 
         var user = await _context.Users.FindAsync(review.UserId);
-        var service = await _context.Services.FindAsync(review.ServiceId);
+        var provider = await _context.PetServiceProviders.FindAsync(review.PetServiceProviderId);
 
         if (user == null)
             return NotFound($"User with ID {review.UserId} not found.");
-        if (service == null)
-            return NotFound($"Service with ID {review.ServiceId} not found.");
+        if (provider == null)
+            return NotFound($"Provider with ID {review.PetServiceProviderId} not found.");
 
         _context.Reviews.Add(review);
         await _context.SaveChangesAsync();
