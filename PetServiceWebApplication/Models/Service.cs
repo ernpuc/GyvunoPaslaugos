@@ -25,8 +25,6 @@ namespace PetServiceWebApplication.Models
         public TimeSpan Duration { get; set; }
 
         [Required]
-        [StringLength(50, ErrorMessage = "Service type cannot exceed 50 characters.")]
-
         public required ServiceType ServiceType { get; set; }
 
         public int PetServiceProviderId { get; set; }
@@ -41,6 +39,9 @@ namespace PetServiceWebApplication.Models
 
         [Required]
         public required AnimalType TargetAnimal { get; set; }
+
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
 
     }
 

@@ -56,7 +56,8 @@ namespace PetServiceWebApplication.Models
         public int AdminId { get; set; }
 
         [JsonIgnore]
-        public required Admin Admin { get; set; }
+        public required string ApplicationUserId { get; set; }
+        public required ApplicationUser ApplicationUser { get; set; }
 
         public enum ProviderCategory
         {
