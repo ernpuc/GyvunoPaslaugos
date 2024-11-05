@@ -1,8 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h2>Pet Service Providers</h2>
+
+<div id="providers-list" class="providers-container">
+    Loading providers...
 </div>
+
+@section Scripts {
+    <script>
+        function loadProviders() {
+            $.ajax({
+                url: '/api/PetServiceProvider',
+                type: 'GET',
+                dataType: 'json',
+                success: function (providers) {
+                    const listContainer = $('#providers-list');
+                    listContainer.empty(); // Clear loading text
+
+                    providers.forEach(provider => {
+                        const imageUrl = provider.image ? provider.image : '/images/default-image.jpg';
+
+                        const providerDiv = $(`
+                                    <div class="provider">
+                                        <img src="${imageUrl}" alt="${provider.name}" class="provider-image" />
+                                        <div class="provider-info">
+                                            <h3>${provider.name}</h3>
+                                            <p>Address: ${provider.address}</p>
+                                            <p>Rating: ${provider.rating.toFixed(1)}</p>
+                                        </div>
+                                    </div>
+                                `);
+                        listContainer.append(providerDiv);
+                    });
+                },
+                error: function () {
+                    $('#providers-list').html('<p>Error loading providers. Please try again later.</p>');
+                }
+            });
+        }
+
+        // Load providers on page load
+        $(document).ready(loadProviders);
+    </script>
+}

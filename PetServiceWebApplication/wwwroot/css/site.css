@@ -2,6 +2,55 @@ html {
   font-size: 14px;
 }
 
+/* Center the providers container vertically */
+.providers-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh; /* Adjust to control vertical centering */
+}
+
+/* Style each provider item */
+.provider {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    width: 80%; /* Control width of each item */
+    max-width: 600px;
+}
+
+/* Style the provider image */
+.provider-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10%;
+    margin-right: 20px;
+}
+
+/* Align text information to the right of the image */
+.provider-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Optional: Add some spacing and styling to text */
+.provider-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.provider-info p {
+    margin: 4px 0;
+    color: #555;
+}
+
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
