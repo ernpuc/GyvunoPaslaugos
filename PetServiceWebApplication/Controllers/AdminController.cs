@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PetServiceWebApplication.Data;
 using PetServiceWebApplication.Models;
 using System.Linq;
+using System.Security.Claims;
 
 namespace PetServiceWebApplication.Controllers
 {
@@ -19,17 +20,11 @@ namespace PetServiceWebApplication.Controllers
             _context = context;
         }
 
-        private int GetCurrentAdminId()
+        private string GetCurrentUserId()
         {
-            if (User.Identity?.IsAuthenticated == true)
-            {
-                var adminIdClaim = User.Claims.FirstOrDefault(c => c.Type == "AdminId");
-                if (adminIdClaim != null && int.TryParse(adminIdClaim.Value, out int adminId))
-                    return adminId;
-            }
-            throw new UnauthorizedAccessException("Admin ID not found in claims.");
+            return User.FindFirstValue(ClaimTypes.NameIdentifier)
+                ?? throw new UnauthorizedAccessException("User ID not found in claims.");
         }
-
 
         [HttpPost("provider/add")]
         public IActionResult AddProvider([FromBody] PetServiceProvider provider)
@@ -37,7 +32,7 @@ namespace PetServiceWebApplication.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            provider.AdminId = GetCurrentAdminId();
+            provider.ApplicationUserId = GetCurrentUserId();
             _context.PetServiceProviders.Add(provider);
             _context.SaveChanges();
             return CreatedAtAction(nameof(GetProviderById), new { id = provider.Id }, provider);
@@ -47,7 +42,7 @@ namespace PetServiceWebApplication.Controllers
         public IActionResult GetProviderById(int id)
         {
             var provider = _context.PetServiceProviders.Find(id);
-            if (provider == null || provider.AdminId != GetCurrentAdminId())
+            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
             return Ok(provider);
         }
@@ -59,7 +54,7 @@ namespace PetServiceWebApplication.Controllers
                 return BadRequest(ModelState);
 
             var existingProvider = _context.PetServiceProviders.Find(id);
-            if (existingProvider == null || existingProvider.AdminId != GetCurrentAdminId())
+            if (existingProvider == null || existingProvider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             existingProvider.Name = provider.Name;
@@ -79,14 +74,13 @@ namespace PetServiceWebApplication.Controllers
         public IActionResult DeleteProvider(int id)
         {
             var provider = _context.PetServiceProviders.Find(id);
-            if (provider == null || provider.AdminId != GetCurrentAdminId())
+            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             _context.PetServiceProviders.Remove(provider);
             _context.SaveChanges();
             return NoContent();
         }
-
 
         [HttpPost("service/add")]
         public IActionResult AddService([FromBody] Service service)
@@ -95,7 +89,7 @@ namespace PetServiceWebApplication.Controllers
                 return BadRequest(ModelState);
 
             var provider = _context.PetServiceProviders.Find(service.PetServiceProviderId);
-            if (provider == null || provider.AdminId != GetCurrentAdminId())
+            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             _context.Services.Add(service);
@@ -109,7 +103,7 @@ namespace PetServiceWebApplication.Controllers
             var service = _context.Services
                 .Include(s => s.PetServiceProvider)
                 .FirstOrDefault(s => s.Id == id);
-            if (service == null || service.PetServiceProvider.AdminId != GetCurrentAdminId())
+            if (service == null || service.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
             return Ok(service);
         }
@@ -123,7 +117,7 @@ namespace PetServiceWebApplication.Controllers
             var existingService = _context.Services
                 .Include(s => s.PetServiceProvider)
                 .FirstOrDefault(s => s.Id == id);
-            if (existingService == null || existingService.PetServiceProvider.AdminId != GetCurrentAdminId())
+            if (existingService == null || existingService.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             existingService.Name = service.Name;
@@ -144,14 +138,13 @@ namespace PetServiceWebApplication.Controllers
             var service = _context.Services
                 .Include(s => s.PetServiceProvider)
                 .FirstOrDefault(s => s.Id == id);
-            if (service == null || service.PetServiceProvider.AdminId != GetCurrentAdminId())
+            if (service == null || service.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             _context.Services.Remove(service);
             _context.SaveChanges();
             return NoContent();
         }
-
 
         [HttpGet("bookings/provider/{providerId}")]
         public IActionResult GetBookingsByProvider(int providerId)
@@ -160,7 +153,7 @@ namespace PetServiceWebApplication.Controllers
                 .Include(p => p.Services)
                 .ThenInclude(s => s.Bookings)
                 .FirstOrDefault(p => p.Id == providerId);
-            if (provider == null || provider.AdminId != GetCurrentAdminId())
+            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             var bookings = provider.Services.SelectMany(s => s.Bookings).ToList();
@@ -174,7 +167,7 @@ namespace PetServiceWebApplication.Controllers
                 .Include(b => b.Service)
                 .ThenInclude(s => s.PetServiceProvider)
                 .FirstOrDefault(b => b.Id == bookingId);
-            if (booking == null || booking.Service.PetServiceProvider.AdminId != GetCurrentAdminId())
+            if (booking == null || booking.Service.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
 
             booking.IsCompleted = false;
