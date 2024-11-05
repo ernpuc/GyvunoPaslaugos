@@ -1,22 +1,20 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace PetServiceWebApplication.Models;
-
-public class User
+namespace PetServiceWebApplication.Models
 {
-    public int Id { get; set; }
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Email { get; set; }
-    public string? Password { get; set; }
-    public string? Phone { get; set; }
+    public class User
+    {
+        public int Id { get; set; }
+        public required string Username { get; set; }
+        public required string Email { get; set; }
 
+        [JsonIgnore]
+        public string PasswordHash { get; set; } 
+        [JsonIgnore] 
+        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    [JsonIgnore]
-    public ICollection<Pet>? Pets { get; set; }
-    [JsonIgnore]
-    public ICollection<Booking>? Bookings { get; set; }
-    [JsonIgnore]
-    public ICollection<Review>? Reviews { get; set; }
+        [JsonIgnore] 
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
+    }
 }
-

@@ -27,19 +27,19 @@ public class ServiceController : Controller
         return Ok(service);
     }
 
-    [HttpGet("clinic/{ProviderId}")]
-    public async Task<IActionResult> GetServicesByClinic([FromRoute] int ProviderId)
+    [HttpGet("provider/{ProviderId}")]
+    public async Task<IActionResult> GetServicesByProvider([FromRoute] int ProviderId)
     {
         var clinic = await _context.PetServiceProviders.FindAsync(ProviderId);
         if (clinic == null)
-            return NotFound($"Clinic with ID {ProviderId} not found.");
+            return NotFound($"Service provider with ID {ProviderId} not found.");
 
         var services = await _context.Services
-            .Where(s => s.ProviderId == ProviderId)
+            .Where(s => s.PetServiceProviderId == ProviderId)
             .ToListAsync();
 
         if (services.Count == 0)
-            return NotFound($"No services found for clinic with ID {ProviderId}.");
+            return NotFound($"No services found for service provider with ID {ProviderId}.");
 
         return Ok(services);
     }
@@ -49,9 +49,9 @@ public class ServiceController : Controller
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var clinic = await _context.PetServiceProviders.FindAsync(service.ProviderId);
+        var clinic = await _context.PetServiceProviders.FindAsync(service.PetServiceProviderId);
         if (clinic == null)
-            return NotFound($"Clinic with ID {service.ProviderId} not found.");
+            return NotFound($"Service provider with ID {service.PetServiceProviderId} not found.");
 
         _context.Services.Add(service);
         await _context.SaveChangesAsync();
