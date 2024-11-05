@@ -1,140 +1,107 @@
-﻿// using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using PetServiceWebApplication.Models;
+using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace PetServiceWebApplication.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
         public DbSet<PetServiceProvider> PetServiceProviders { get; set; }
-        public DbSet<Review> Reviews { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure Booking
-            modelBuilder.Entity<Booking>()
-                .HasKey(b => b.Id);
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Name = "User", NormalizedName = "USER" }
+            );
 
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.User)
-                .WithMany(u => u.Bookings)
-                .HasForeignKey(b => b.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Service)
-                .WithMany()
-                .HasForeignKey(b => b.ServiceId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Booking>()
-                .Property(b => b.BookingDate)
-                .HasDefaultValueSql("GETDATE()");
-
-            modelBuilder.Entity<Booking>()
-                .Property(b => b.IsCompleted)
-                .HasDefaultValue(false);
-
-            modelBuilder.Entity<Booking>()
-                .Property(b => b.IsPaid)
-                .HasDefaultValue(false);
-
-            // Configure PetServiceProvider
+            // PetServiceProvider Configuration
             modelBuilder.Entity<PetServiceProvider>()
                 .HasKey(p => p.Id);
 
             modelBuilder.Entity<PetServiceProvider>()
-                .Property(p => p.Name)
-                .IsRequired();
-
-            modelBuilder.Entity<PetServiceProvider>()
-                .Property(p => p.Address)
-                .IsRequired();
-
-            modelBuilder.Entity<PetServiceProvider>()
-                .Property(p => p.Phone)
-                .IsRequired();
-
-            modelBuilder.Entity<PetServiceProvider>()
-                .Property(p => p.Email)
-                .IsRequired();
-
-            modelBuilder.Entity<PetServiceProvider>()
-                .Property(p => p.OpeningTime)
-                .HasDefaultValue(new TimeSpan(9, 0, 0));
-
-            modelBuilder.Entity<PetServiceProvider>()
-                .Property(p => p.ClosingTime)
-                .HasDefaultValue(new TimeSpan(17, 0, 0));
-
-            modelBuilder.Entity<PetServiceProvider>()
-                .Ignore(p => p.Rating); // Rating is computed, not stored
-
-            // Configure Review
-            modelBuilder.Entity<Review>()
-                .HasKey(r => r.Id);
-
-            modelBuilder.Entity<Review>()
-                .Property(r => r.Date)
-                .IsRequired();
-
-            modelBuilder.Entity<Review>()
-                .HasOne(r => r.PetServiceProvider)
-                .WithMany(p => p.Reviews)
+                .HasMany(p => p.Reviews)
+                .WithOne(r => r.PetServiceProvider)
                 .HasForeignKey(r => r.PetServiceProviderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
 
-            modelBuilder.Entity<Review>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Reviews)
-                .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<PetServiceProvider>()
+                .HasMany(p => p.Services)
+                .WithOne(s => s.PetServiceProvider)
+                .HasForeignKey(s => s.PetServiceProviderId)
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
 
-            // Configure Service
+            modelBuilder.Entity<PetServiceProvider>()
+                .Property(p => p.Category)
+                .HasConversion<string>();  // For storing enum as string
+
+            // Service Configuration
             modelBuilder.Entity<Service>()
                 .HasKey(s => s.Id);
 
             modelBuilder.Entity<Service>()
-                .Property(s => s.Name)
-                .IsRequired();
+                .Property(s => s.ServiceType)
+                .HasConversion<string>();  // For storing enum as string
 
             modelBuilder.Entity<Service>()
-                .Property(s => s.Description)
-                .IsRequired();
-
-            modelBuilder.Entity<Service>()
-                .Property(s => s.Price)
-                .IsRequired()
-                .HasColumnType("decimal(18,2)");
-
-            modelBuilder.Entity<Service>()
-                .Property(s => s.IsActive)
-                .HasDefaultValue(true);
+                .Property(s => s.TargetAnimal)
+                .HasConversion<string>();  // For storing enum as string
 
             modelBuilder.Entity<Service>()
                 .HasOne(s => s.PetServiceProvider)
                 .WithMany(p => p.Services)
                 .HasForeignKey(s => s.PetServiceProviderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
 
-            // Configure User
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.Id);
+            // Booking Configuration
+            modelBuilder.Entity<Booking>()
+                .HasKey(b => b.Id);
 
-            modelBuilder.Entity<User>()
-                .Property(u => u.Email)
-                .IsRequired(false); // Nullable in this model
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.ApplicationUser)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
 
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Service)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.ServiceId)
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
+
+            // Review Configuration
+            modelBuilder.Entity<Review>()
+                .HasKey(r => r.Id);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.ApplicationUser)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.PetServiceProvider)
+                .WithMany(p => p.Reviews)
+                .HasForeignKey(r => r.PetServiceProviderId)
+                .OnDelete(DeleteBehavior.Restrict);  // Restrict delete
+
+            // Setting up DayOfWeek collection in PetServiceProvider
+            modelBuilder.Entity<PetServiceProvider>()
+                .Property(p => p.AvailableDays)
+                .HasConversion(
+                    v => string.Join(",", v),            // Convert list to string for storage
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                          .Select(d => Enum.Parse<DayOfWeek>(d))
+                          .ToList());                  // Convert string back to list on retrieval
         }
     }
 }

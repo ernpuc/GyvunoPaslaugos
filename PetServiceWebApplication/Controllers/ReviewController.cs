@@ -50,14 +50,14 @@ public class ReviewController : Controller
     }
 
     [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetReviewsByUser([FromRoute] int userId)
+    public async Task<IActionResult> GetReviewsByUser([FromRoute] string userId)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
             return NotFound($"User with ID {userId} not found.");
 
         var reviews = await _context.Reviews
-            .Where(r => r.UserId == userId)
+            .Where(r => r.ApplicationUserId == userId)
             .ToListAsync();
 
         if (reviews.Count == 0)
@@ -72,11 +72,11 @@ public class ReviewController : Controller
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = await _context.Users.FindAsync(review.UserId);
+        var user = await _context.Users.FindAsync(review.ApplicationUserId);
         var provider = await _context.PetServiceProviders.FindAsync(review.PetServiceProviderId);
 
         if (user == null)
-            return NotFound($"User with ID {review.UserId} not found.");
+            return NotFound($"User with ID {review.ApplicationUserId} not found.");
         if (provider == null)
             return NotFound($"Provider with ID {review.PetServiceProviderId} not found.");
 

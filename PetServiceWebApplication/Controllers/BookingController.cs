@@ -27,23 +27,23 @@ public class BookingController : Controller
         return Ok(booking);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetBookingsByUser([FromRoute] int userId)
-    {
-        User? user = await _context.Users.FindAsync(userId);
+    //[HttpGet("user/{userId}")]
+    //public async Task<IActionResult> GetBookingsByUser([FromRoute] int userId)
+    //{
+    //    User? user = await _context.Users.FindAsync(userId);
 
-        if (user == null)
-            return BadRequest($"User with ID {userId} not found.");
+    //    if (user == null)
+    //        return BadRequest($"User with ID {userId} not found.");
 
-        List<Booking> bookings = await _context.Bookings
-            .Where(b => b.UserId == userId)
-            .ToListAsync();
+    //    List<Booking> bookings = await _context.Bookings
+    //        .Where(b => b.UserId == userId)
+    //        .ToListAsync();
 
-        if (bookings.Count == 0)
-            return NotFound("No bookings found for this user.");
+    //    if (bookings.Count == 0)
+    //        return NotFound("No bookings found for this user.");
 
-        return Ok(bookings);
-    }
+    //    return Ok(bookings);
+    //}
 
     [HttpPost]
     public async Task<IActionResult> CreateBooking([FromBody] Booking booking)
