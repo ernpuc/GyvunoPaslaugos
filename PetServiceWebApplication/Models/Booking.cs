@@ -7,8 +7,8 @@ namespace PetServiceWebApplication.Models
     {
         public int Id { get; set; }
 
-        public int UserId { get; set; }
-        public required User User { get; set; }
+        public required string ApplicationUserId { get; set; }
+        public required ApplicationUser ApplicationUser { get; set; }
 
         public int ServiceId { get; set; }
         public required Service Service { get; set; }

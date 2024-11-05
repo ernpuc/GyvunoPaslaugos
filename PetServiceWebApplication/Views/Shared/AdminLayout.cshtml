@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="admin-sidebar">
+        <ul>
+            <li><a href="/api/admin/providers">Manage Providers</a></li>
+            <li><a href="/api/admin/services">Manage Services</a></li>
+            <li><a href="/api/admin/bookings">Manage Bookings</a></li>
+        </ul>
+    </div>
+    <div class="admin-content">
+        @RenderBody()
+    </div>
+</body>
+</html>

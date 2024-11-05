@@ -20,7 +20,7 @@ namespace PetServiceWebApplication.Models
         [JsonIgnore]
         public required PetServiceProvider PetServiceProvider { get; set; }
 
-        public int UserId { get; set; }
-        public required User User { get; set; }
+        public required string ApplicationUserId { get; set; }
+        public required ApplicationUser ApplicationUser { get; set; }
     }
 }

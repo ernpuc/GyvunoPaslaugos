@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetServiceWebApplication.Data;
 using PetServiceWebApplication.Models;
@@ -11,6 +12,7 @@ namespace PetServiceWebApplication.Controllers;
 public class UserController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public UserController(ApplicationDbContext context)
     {
@@ -36,7 +38,7 @@ public class UserController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser([FromBody] User user)
+    public async Task<IActionResult> CreateUser([FromBody] ApplicationUser user)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -48,7 +50,7 @@ public class UserController : Controller
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] User user)
+    public async Task<IActionResult> UpdateUser([FromRoute] string id, [FromBody] ApplicationUser user)
     {
         if (id != user.Id)
             return BadRequest("User ID mismatch.");
@@ -64,7 +66,7 @@ public class UserController : Controller
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!_context.Users.Any(u => u.Id == id))
+            if (await _userManager.FindByIdAsync(id) == null)
                 return NotFound($"User with ID {id} not found.");
             throw;
         }
