@@ -71,6 +71,15 @@ namespace PetServiceWebApplication.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [StringLength(15, ErrorMessage = "First name cannot exceed 15 characters.")]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(20, ErrorMessage = "Last name cannot exceed 20 characters.")]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -115,6 +124,9 @@ namespace PetServiceWebApplication.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -123,14 +135,14 @@ namespace PetServiceWebApplication.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                    //var userId = await _userManager.GetUserIdAsync(user);
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    //var callbackUrl = Url.Page(
+                    //    "/Account/ConfirmEmail",
+                    //    pageHandler: null,
+                    //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                    //    protocol: Request.Scheme);
 
                     //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                     //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");

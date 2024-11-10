@@ -8,6 +8,8 @@ namespace PetServiceWebApplication.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        private readonly PasswordHasher<ApplicationUser> _passwordHasher = new PasswordHasher<ApplicationUser>();
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<PetServiceProvider> PetServiceProviders { get; set; }
@@ -20,8 +22,38 @@ namespace PetServiceWebApplication.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<IdentityRole>().HasData(
-                new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" },
-                new IdentityRole { Name = "User", NormalizedName = "USER" }
+                new IdentityRole { Id= "71e0ace6-27db-4891-947a-7af9634b6ad2", Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Id= "7ecec5ed-2b44-406c-8ff3-4cbed083961f", Name = "User", NormalizedName = "USER" },
+                new IdentityRole { Id= "d5c866d9-eae9-4a14-99e9-d2a44fbd5d70", Name = "ServiceAdmin", NormalizedName = "SERVICEADMIN" }
+            );
+
+            // Seed super admin user
+            var adminUser = new ApplicationUser
+            {
+                Id = "f7c638da-17e3-4bcc-960f-706b8922c2d8",
+                UserName = "admin@gmail.com",
+                Email = "admin@gmail.com",
+                FirstName = "Admin",
+                LastName = "User",
+                EmailConfirmed = true
+            };
+
+            adminUser.NormalizedUserName = adminUser.UserName.ToUpper();
+            adminUser.NormalizedEmail = adminUser.Email.ToUpper();
+
+            // Hash the password before seeding the user
+            adminUser.PasswordHash = _passwordHasher.HashPassword(adminUser, "Admin_123");
+
+            // Seed the user
+            modelBuilder.Entity<ApplicationUser>().HasData(adminUser);
+
+            // Seed the relationship between the user and the "Admin" role (manually set the role)
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    UserId = adminUser.Id,
+                    RoleId = "71e0ace6-27db-4891-947a-7af9634b6ad2"     // Admin role id
+                }
             );
 
             // PetServiceProvider Configuration
