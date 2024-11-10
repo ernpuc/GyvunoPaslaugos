@@ -10,7 +10,7 @@ namespace PetServiceWebApplication.Controllers
 {
     [Route("api/admin")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "ServiceAdmin")]
     public class AdminController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
