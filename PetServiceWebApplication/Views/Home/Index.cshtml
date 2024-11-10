@@ -1,47 +1,43 @@
 ﻿@{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Home - FluffFix";
 }
 
-<h2>Pet Service Providers</h2>
+<div class="outer-container d-flex justify-content-center align-items-center">
+    <div class="container_main my-5 d-flex align-items-start">
+        <div class="content-section">
+            <div class="text-left">
+                <h1 class="main-heading">Discover Expert Pet Services Tailored for Your Companion</h1>
+                <p class="sub-heading">Give Your Pet the Royal Treatment! Book Trusted Local Experts for Grooming, Training, and More – All Tailored to Keep Your Furry Friend Happy and Healthy!</p>
+            </div>
 
-<div id="providers-list" class="providers-container">
-    Loading providers...
+            <div class="card p-4 search-card mt-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <h5 class="text-start form-title">Search for services</h5>
+                    <h5 class="text-end form-title">Search for provider</h5>
+                </div>
+                <form asp-controller="Service" asp-action="Search">
+                    <div class="form-group mb-3">
+                        <span class="form-icon"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="service" name="service" placeholder="Service (e.g., grooming)">
+                    </div>
+                    <div class="form-group mb-3">
+                        <span class="form-icon"><i class="fas fa-map-marker-alt"></i></span>
+                        <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+                    </div>
+                    <div class="form-group mb-3">
+                        <span class="form-icon"><i class="fas fa-calendar-alt"></i></span>
+                        <input type="date" class="form-control" id="date" name="date">
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary search-button">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Image -->
+        <div class="image-section d-flex align-items-center justify-content-center">
+            <img src="~/images/pet_image.png" alt="Cute Dog" class="img-fluid pet-image">
+        </div>
+    </div>
 </div>
-
-@section Scripts {
-    <script>
-        function loadProviders() {
-            $.ajax({
-                url: '/api/PetServiceProvider',
-                type: 'GET',
-                dataType: 'json',
-                success: function (providers) {
-                    const listContainer = $('#providers-list');
-                    listContainer.empty(); // Clear loading text
-
-                    providers.forEach(provider => {
-                        const imageUrl = provider.image ? provider.image : '/images/default-image.jpg';
-
-                        const providerDiv = $(`
-                                    <div class="provider">
-                                        <img src="${imageUrl}" alt="${provider.name}" class="provider-image" />
-                                        <div class="provider-info">
-                                            <h3>${provider.name}</h3>
-                                            <p>Address: ${provider.address}</p>
-                                            <p>Rating: ${provider.rating.toFixed(1)}</p>
-                                        </div>
-                                    </div>
-                                `);
-                        listContainer.append(providerDiv);
-                    });
-                },
-                error: function () {
-                    $('#providers-list').html('<p>Error loading providers. Please try again later.</p>');
-                }
-            });
-        }
-
-        // Load providers on page load
-        $(document).ready(loadProviders);
-    </script>
-}
