@@ -1,0 +1,194 @@
+﻿@model IEnumerable<PetServiceWebApplication.Models.PetServiceProvider>
+
+@{
+    ViewData["Title"] = "Service Providers";
+}
+
+<style>
+    #addProviderForm {
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        gap: 10px;
+    }
+
+        #addProviderForm label {
+            margin-bottom: 5px;
+        }
+
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .form-group label {
+            flex: 1;
+        }
+
+        .form-group input, .form-group select {
+            flex: 2;
+            padding: 5px;
+        }
+
+    .time-input-container {
+        display: flex;
+        flex-direction: column;
+        width: 100px;
+    }
+
+    .time-input {
+        width: 100%;
+        padding: 5px;
+        text-align: center;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+
+        .time-input::placeholder {
+            color: #aaa;
+        }
+</style>
+
+<h1>Pet Service Providers</h1>
+
+<br />
+
+<!-- Display the list of providers -->
+<div id="tableContainer" style="display:none">
+    <table id="providerTable" class="table" border="1" style="width:100%; text-align:left;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- provider rows will be dynamically populated here -->
+        </tbody>
+    </table>
+</div>
+
+<div id="noProvidersMessage" style="display: none;">No Pet Service Providers available.</div>
+
+<br />
+
+<h3>Add new service provider</h3>
+
+<form id="addProviderForm">
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="Name" required />
+    </div>
+    <div class="form-group">
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="Address" required />
+    </div>
+    <div class="form-group">
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="Phone" required />
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="Email" required />
+    </div>
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <select id="category" name="Category" required>
+            <option value="" disabled selected>Select a category</option>
+            <option value="Grooming">Grooming</option>
+            <option value="Training">Training</option>
+            <option value="Boarding">Boarding</option>
+            <option value="Veterinary">Veterinary</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="Description" />
+    </div>
+    <div class="form-group">
+        <label for="imageUrl">Image Url:</label>
+        <input type="text" id="imageUrl" name="ImageUrl" />
+    </div>
+@*     <div class="form-group">
+        <label for="openingTime">Opening Time:</label>
+        <input type="time" name="OpeningTime" value="09:00" />
+    </div>
+    <div class="form-group">
+        <label for="closingTime">Closing Time:</label>
+        <input type="time" name="ClosingTime" value="17:00" />
+    </div> *@
+
+    <button type="submit">Add Service Provider</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+        function loadServiceProviders() {
+            $.ajax({
+                url: '/api/admin/providers',
+                type: 'GET',
+                success: function (data) {
+                    let providerRows = '';
+                    $.each(data, function (index, provider) {
+                        providerRows += `
+                            <tr>
+                                <td>${provider.name}</td>
+                                <td>${provider.address}</td>
+                                <td>${provider.phone}</td>
+                                <td>${provider.email}</td>
+                            </tr>
+                        `;
+                    });
+                    $('#providerTable tbody').html(providerRows);
+
+                    $('#noProvidersMessage').hide();
+                    $('#tableContainer').show();
+                },
+                error: function () {
+                    $('#tableContainer').hide();
+                    $('#noProvidersMessage').show();
+                }
+            });
+        }
+
+        // Load providers when the page loads
+        loadServiceProviders();
+
+        // Handle form submission for adding a new provider
+        $('#addProviderForm').on('submit', function (event) {
+            event.preventDefault();
+
+            // Gather form data
+            const newProvider = {
+                ApplicationUserId: "tmp",
+                Name: $('input[name="Name"]').val(),
+                Address: $('input[name="Address"]').val(),
+                Phone: $('input[name="Phone"]').val(),
+                Email: $('input[name="Email"]').val(),
+                Category: $('select[name="Category"]').val(),
+                Description: $('input[name="Description"]').val(),
+                Image: $('input[name="ImageUrl"]').val()
+                // OpeningTime: $('input[name="OpeningTime"]').val(),
+                // ClosingTime: $('input[name="ClosingTime"]').val()
+            };
+
+            console.log(JSON.stringify(newProvider));
+
+            $.ajax({
+                url: '/api/admin/provider/add',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(newProvider),
+                success: function (data) {
+                    loadServiceProviders();
+                },
+                error: function () {
+                    alert("Error adding provider.");
+                }
+            });
+        });
+    });
+</script>

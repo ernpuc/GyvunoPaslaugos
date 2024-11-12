@@ -11,13 +11,18 @@ namespace PetServiceWebApplication.Controllers
     [Route("api/admin")]
     [ApiController]
     [Authorize(Roles = "ServiceAdmin")]
-    public class AdminController : ControllerBase
+    public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
 
         public AdminController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public IActionResult ServiceProviders()
+        {
+            return View();
         }
 
         private string GetCurrentUserId()
@@ -45,6 +50,23 @@ namespace PetServiceWebApplication.Controllers
             if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
                 return NotFound();
             return Ok(provider);
+        }
+
+        [HttpGet("providers")]
+        public IActionResult GetProvidersForAdmin()
+        {
+            var currentUserId = GetCurrentUserId();
+            if (currentUserId == null)
+                return Unauthorized();
+
+            var providers = _context.PetServiceProviders
+                                    .Where(p => p.ApplicationUserId == currentUserId)
+                                    .ToList();
+
+            if (!providers.Any())
+                return NotFound();
+
+            return Ok(providers);
         }
 
         [HttpPut("provider/update/{id}")]

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace PetServiceWebApplication.Models
@@ -34,13 +36,13 @@ namespace PetServiceWebApplication.Models
         [Url(ErrorMessage = "Invalid image URL format.")]
         public string? Image { get; set; }
 
-        [Required]
+        //[Required]
         [Range(typeof(TimeSpan), "00:00:00", "23:59:59", ErrorMessage = "Opening time must be a valid time of day.")]
         public TimeSpan OpeningTime { get; set; } = new TimeSpan(9, 0, 0);
 
-        [Required]
+        //[Required]
         [Range(typeof(TimeSpan), "00:00:00", "23:59:59", ErrorMessage = "Closing time must be a valid time of day.")]
-        [Compare(nameof(OpeningTime), ErrorMessage = "Closing time must be later than opening time.")]
+        //[Compare(nameof(OpeningTime), ErrorMessage = "Closing time must be later than opening time.")]
         public TimeSpan ClosingTime { get; set; } = new TimeSpan(17, 0, 0);
 
         public List<DayOfWeek> AvailableDays { get; set; } = new List<DayOfWeek> { DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday };
@@ -54,13 +56,13 @@ namespace PetServiceWebApplication.Models
         [JsonIgnore]
         public double Rating => Reviews.Count > 0 ? Reviews.Average(r => r.Rating) : 0.0;
 
-        public int AdminId { get; set; }
+        //public int AdminId { get; set; }
 
-        [JsonIgnore]
+        [Required]
         public required string ApplicationUserId { get; set; }
 
-        [JsonIgnore]
-        public required ApplicationUser ApplicationUser { get; set; }
+        //[JsonIgnore]
+        //public required ApplicationUser ApplicationUser { get; set; }
 
         public enum ProviderCategory
         {
