@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "ProviderList";
+}
+<style>
+    .provider {
+        display: flex;
+        align-items: center; 
+        gap: 20px;
+    }
+
+    .provider-image {
+        max-width: 100%; 
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .provider-info {
+        display: flex;
+        flex-direction: column; 
+        gap: 10px; 
+    }
+
+        .provider-info h3 {
+            margin: 0;
+            font-size: 1.2rem; 
+        }
+
+        .provider-info p {
+            margin: 0; 
+        }
+</style>
+
+<h2>Pet Service Providers</h2>
+
+<div id="providers-list" class="providers-container">
+    Loading providers...
+</div>
+
+@section Scripts {
+    <script>
+        function loadProviders() {
+            $.ajax({
+                url: '/api/PetServiceProvider',
+                type: 'GET',
+                dataType: 'json',
+                success: function (providers) {
+                    const listContainer = $('#providers-list');
+                    listContainer.empty(); // Clear loading text
+
+                    providers.forEach(provider => {
+                        const imageUrl = provider.image ? provider.image : '/images/default-image.jpg';
+
+                        const providerDiv = $(`
+                                    <div class="provider">
+                                        <img src="${imageUrl}" alt="${provider.name}" height="200" width="200" class="provider-image" />
+                                        <div class="provider-info">
+                                            <h3>${provider.name}</h3>
+                                            <p>Address: ${provider.address}</p>
+                                            <p>Phone: ${provider.phone}</p>
+                                        </div>
+                                    </div>
+                                    <br>
+                                `);
+                        listContainer.append(providerDiv);
+                    });
+                },
+                error: function () {
+                    $('#providers-list').html('<p>Error loading providers. Please try again later.</p>');
+                }
+            });
+        }
+
+        // Load providers on page load
+        $(document).ready(loadProviders);
+    </script>
+}

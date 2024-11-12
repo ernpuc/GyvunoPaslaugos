@@ -45,13 +45,17 @@
                             // User is signed in as a regular user
                             else
                             {
-
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ProviderList">Service Providers</a>
+                                </li>
                             }
                         }
                         // User is not signed in
                         else
                         {
-                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ProviderList">Service Providers</a>
+                            </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />
