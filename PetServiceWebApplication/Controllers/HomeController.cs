@@ -18,11 +18,6 @@ namespace PetServiceWebApplication.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         public IActionResult ServiceProviders()
         {
             return View("/Views/Services/ServiceProviders.cshtml");

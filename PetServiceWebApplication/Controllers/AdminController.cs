@@ -51,7 +51,10 @@ namespace PetServiceWebApplication.Controllers
         public IActionResult UpdateProvider(int id, [FromBody] PetServiceProvider provider)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                return BadRequest(new { Errors = errors });
+            }
 
             var existingProvider = _context.PetServiceProviders.Find(id);
             if (existingProvider == null || existingProvider.ApplicationUserId != GetCurrentUserId())

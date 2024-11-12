@@ -51,12 +51,15 @@ namespace PetServiceWebApplication.Models
         [JsonIgnore]
         public ICollection<Service> Services { get; set; } = new List<Service>();
 
+        [JsonIgnore]
         public double Rating => Reviews.Count > 0 ? Reviews.Average(r => r.Rating) : 0.0;
 
         public int AdminId { get; set; }
 
         [JsonIgnore]
         public required string ApplicationUserId { get; set; }
+
+        [JsonIgnore]
         public required ApplicationUser ApplicationUser { get; set; }
 
         public enum ProviderCategory

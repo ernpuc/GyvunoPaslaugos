@@ -2,6 +2,8 @@
 using PetServiceWebApplication.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 
 public class ApplicationUser : IdentityUser
 {
@@ -13,6 +15,9 @@ public class ApplicationUser : IdentityUser
     [StringLength(20, ErrorMessage = "Last name cannot exceed 20 characters.")]
     public required string LastName { get; set; }
 
+    [JsonIgnore]
     public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    [JsonIgnore]
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 }
