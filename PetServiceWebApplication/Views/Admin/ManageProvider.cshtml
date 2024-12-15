@@ -1,0 +1,76 @@
+﻿@model PetServiceWebApplication.Models.ProviderInfoDTO
+
+<form id="updateProviderForm">
+    <input type="hidden" name="Id" id="updateProviderId" value="@Model.Provider.Id" />
+    
+    <label>Name: 
+        <input type="text" name="Name" id="updateName" value="@Model.Provider.Name" />
+    </label><br>
+    
+    <label>Address: 
+        <input type="text" name="Address" id="updateAddress" value="@Model.Provider.Address" />
+    </label><br>
+    
+    <label>Phone: 
+        <input type="text" name="Phone" id="updatePhone" value="@Model.Provider.Phone" />
+    </label><br>
+    
+    <label>Email: 
+        <input type="text" name="Email" id="updateEmail" value="@Model.Provider.Email" />
+    </label><br>
+    
+    <label>Category:
+        <select id="updateCategory" name="Category">
+            <option value="" disabled selected="@(Model.Provider.Category == null ? "true" : null)">Select a category</option>
+            @foreach (var category in Enum.GetValues(typeof(PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory)))
+            {
+                <option value="@category" selected="@(Model.Provider.Category == (PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory)category ? "true" : null)">@category</option>
+            }
+        </select>
+    </label><br>
+    
+    <label>Description: 
+        <input type="text" name="Description" id="updateDescription" value="@Model.Provider.Description" />
+    </label><br>
+    
+    <label>ImageUrl: 
+        <input type="text" name="ImageUrl" id="updateImageUrl" value="@Model.Provider.Image" />
+    </label><br>
+    
+    <button type="submit">Save Changes</button>
+</form>
+
+
+
+@section Scripts {
+    <script>
+    document.getElementById('updateProviderForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const id = formData.get('Id');
+        const data = {
+            Id: parseInt(id),
+            Name: formData.get('Name'),
+            Address: formData.get('Address'),
+            Phone: formData.get('Phone'),
+            Email: formData.get('Email'),
+            Category: formData.get('Category'),
+            Description: formData.get('Description'),
+            Image: formData.get('ImageUrl')
+        };
+
+        const response = await fetch('/api/admin/provider/update/' + id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            window.location.href = '/api/admin';
+        } else {
+            alert("Error updating provider: " + await response.text());
+        }
+    });
+    </script>
+}

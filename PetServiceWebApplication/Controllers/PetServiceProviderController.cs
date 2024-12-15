@@ -16,16 +16,24 @@ public class PetServiceProviderController : Controller
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllProviders()
+    [HttpGet("providers-by-criteria")]
+    public async Task<IActionResult> SearchProvidersByCriteria(
+        [FromQuery] string? location,
+        [FromQuery] PetServiceProvider.ProviderCategory? category)
     {
-        var providers = await _context.PetServiceProviders.ToListAsync();
+        var providersQuery = _context.PetServiceProviders.AsQueryable();
 
-        if (providers == null || providers.Count == 0)
-            return NotFound("No providers found.");
+        if (!string.IsNullOrWhiteSpace(location))
+            providersQuery = providersQuery.Where(p => EF.Functions.Like(p.Address, $"%{location}%"));
 
-        return Ok(providers);
+        if (category.HasValue)
+            providersQuery = providersQuery.Where(p => p.Category == category);
+
+        var providers = await providersQuery.ToListAsync();
+
+        return View("ProviderList", providers.Any() ? providers : new List<PetServiceProvider>());
     }
+
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProviderById([FromRoute] int id)
@@ -89,4 +97,28 @@ public class PetServiceProviderController : Controller
 
         return NoContent();
     }
+
+
+    [HttpGet("provider/{id}/services")]
+    public async Task<IActionResult> GetProviderWithServices(int id)
+    {
+        var provider = await _context.PetServiceProviders
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        if (provider == null)
+            return NotFound($"No provider found with ID {id}.");
+
+        var services = await _context.Services
+            .Where(s => s.PetServiceProviderId == id)
+            .ToListAsync();
+
+        var model = new ProviderInfoDTO
+        {
+            Provider = provider,
+            Services = services,
+        };
+
+        return View("ProviderInfo", model);
+    }
+
 }
