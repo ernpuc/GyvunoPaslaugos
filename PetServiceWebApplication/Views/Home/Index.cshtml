@@ -11,22 +11,20 @@
             </div>
 
             <div class="card p-4 search-card mt-4">
-                <div class="d-flex justify-content-between mb-3">
-                    <h5 class="text-start form-title">Search for services</h5>
-                    <h5 class="text-end form-title">Search for provider</h5>
-                </div>
-                <form asp-controller="Service" asp-action="Search">
+                <form asp-controller="PetServiceProvider" asp-action="SearchProvidersByCriteria" method="get">
                     <div class="form-group mb-3">
                         <span class="form-icon"><i class="fas fa-search"></i></span>
-                        <input type="text" class="form-control" id="service" name="service" placeholder="Service (e.g., grooming)">
+                        <select class="form-control" id="category" name="category" placeholder="Service (e.g., grooming)">
+                            <option value="" selected>Select a service</option>
+                            <option value="Grooming">Grooming</option>
+                            <option value="Training">Training</option>
+                            <option value="Boarding">Boarding</option>
+                            <option value="Veterinary">Veterinary</option>
+                        </select>
                     </div>
                     <div class="form-group mb-3">
                         <span class="form-icon"><i class="fas fa-map-marker-alt"></i></span>
                         <input type="text" class="form-control" id="location" name="location" placeholder="Location">
-                    </div>
-                    <div class="form-group mb-3">
-                        <span class="form-icon"><i class="fas fa-calendar-alt"></i></span>
-                        <input type="date" class="form-control" id="date" name="date">
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary search-button">Search</button>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetServiceWebApplication.Data;
 using PetServiceWebApplication.Models;
+using System.Drawing;
 using System.Linq;
 using System.Security.Claims;
 
@@ -78,20 +79,22 @@ namespace PetServiceWebApplication.Controllers
                 return BadRequest(new { Errors = errors });
             }
 
-            var existingProvider = _context.PetServiceProviders.Find(id);
-            if (existingProvider == null || existingProvider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
+            provider.ApplicationUserId = GetCurrentUserId();
 
-            existingProvider.Name = provider.Name;
-            existingProvider.Address = provider.Address;
-            existingProvider.Phone = provider.Phone;
-            existingProvider.Email = provider.Email;
-            existingProvider.Description = provider.Description;
-            existingProvider.OpeningTime = provider.OpeningTime;
-            existingProvider.ClosingTime = provider.ClosingTime;
-            existingProvider.AvailableDays = provider.AvailableDays;
+            _context.Entry(provider).State = EntityState.Modified;
 
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.PetServiceProviders.Any(p => p.Id == id))
+                    return NotFound($"Provider with ID {id} not found.");
+                throw;
+            }
+
+
             return NoContent();
         }
 
@@ -198,6 +201,28 @@ namespace PetServiceWebApplication.Controllers
             booking.IsCompleted = false;
             _context.SaveChanges();
             return NoContent();
+        }
+
+        [HttpGet("ManageProvider/{id}")]
+        public async Task<IActionResult> GetProviderWithServices(int id)
+        {
+            var provider = await _context.PetServiceProviders
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (provider == null)
+                return NotFound($"No provider found with ID {id}.");
+
+            var services = await _context.Services
+                .Where(s => s.PetServiceProviderId == id)
+                .ToListAsync();
+
+            var model = new ProviderInfoDTO
+            {
+                Provider = provider,
+                Services = services,
+            };
+
+            return View("ManageProvider", model);
         }
     }
 }

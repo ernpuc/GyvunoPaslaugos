@@ -63,6 +63,7 @@
                 <th>Address</th>
                 <th>Phone</th>
                 <th>Email</th>
+                <th>Manage</th>
             </tr>
         </thead>
         <tbody>
@@ -133,12 +134,14 @@
                 success: function (data) {
                     let providerRows = '';
                     $.each(data, function (index, provider) {
+                        const manageProviderUrl = `Admin/ManageProvider/${provider.id}`;
                         providerRows += `
                             <tr>
                                 <td>${provider.name}</td>
                                 <td>${provider.address}</td>
                                 <td>${provider.phone}</td>
                                 <td>${provider.email}</td>
+                                <td><a href = "${manageProviderUrl}">Manage</a></td>
                             </tr>
                         `;
                     });
@@ -156,6 +159,10 @@
 
         // Load providers when the page loads
         loadServiceProviders();
+
+        function redirectToProviderManagement(providerId) {
+            window.location.href = '/Admin/ManageProvider/' + providerId;
+        }
 
         // Handle form submission for adding a new provider
         $('#addProviderForm').on('submit', function (event) {

@@ -58,8 +58,7 @@ namespace PetServiceWebApplication.Models
 
         //public int AdminId { get; set; }
 
-        [Required]
-        public required string ApplicationUserId { get; set; }
+        public string? ApplicationUserId { get; set; }
 
         //[JsonIgnore]
         //public required ApplicationUser ApplicationUser { get; set; }
