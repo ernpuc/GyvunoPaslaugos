@@ -1,0 +1,133 @@
+﻿@model PetServiceWebApplication.Models.ServiceUpdateDTO
+
+<style>
+    #addProviderForm {
+        display: flex;
+        flex-direction: column;
+        max-width: 400px;
+        gap: 10px;
+    }
+
+        #addProviderForm label {
+            margin-bottom: 5px;
+        }
+
+    .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .form-group label {
+            flex: 1;
+        }
+
+        .form-group input, .form-group select {
+            flex: 2;
+            padding: 5px;
+        }
+
+</style>
+
+<form id="updateServiceForm">
+    <input type="hidden" name="ServiceId" id="serviceId" value="@Model.Service.Id" />
+    <input type="hidden" name="ProviderId" id="providerId" value="@Model.Service.PetServiceProviderId" />
+
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="Name" required value="@Model.Service.Name"  />
+    </div>
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="Description" required value="@Model.Service.Description" />
+    </div>
+    <div class="form-group">
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="Price" required value="@Model.Service.Price" />
+    </div>
+    <div class="form-group">
+        <label for="serviceType">Service Type:</label>
+        <select id="serviceType" name="ServiceType" required>
+            <option value="" disabled selected>Select a service type</option>
+
+            @if (@Model.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Grooming)
+            {
+                <option value="BasicGrooming" selected="@(Model.Service.ServiceType.ToString() == "BasicGrooming" ? "true" : null)">Grooming</option>
+                <option value="AdvancedGrooming" selected="@(Model.Service.ServiceType.ToString() == "AdvancedGrooming" ? "true" : null)">Advanced Grooming</option>
+                <option value="DeluxeGrooming" selected="@(Model.Service.ServiceType.ToString() == "DeluxeGrooming" ? "true" : null)">Deluxe Grooming</option>
+            }
+            else if (@Model.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Training)
+            {
+                <option value="BasicTraining" selected="@(Model.Service.ServiceType.ToString() == "BasicTraining" ? "true" : null)">Basic Training</option>
+                <option value="ObedienceTraining" selected="@(Model.Service.ServiceType.ToString() == "ObedienceTraining" ? "true" : null)">Obedience Training</option>
+                <option value="AdvancedTraining" selected="@(Model.Service.ServiceType.ToString() == "AdvancedTraining" ? "true" : null)">Advanced Training</option>
+            }
+            else if (@Model.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Boarding)
+            {
+                <option value="ShortTermBoarding" selected="@(Model.Service.ServiceType.ToString() == "ShortTermBoarding" ? "true" : null)">Short Term Boarding</option>
+                <option value="LongTermBoarding" selected="@(Model.Service.ServiceType.ToString() == "LongTermBoarding" ? "true" : null)">Long Term Boarding</option>
+                <option value="SpecialCareBoarding" selected="@(Model.Service.ServiceType.ToString() == "SpecialCareBoarding" ? "true" : null)">Special Care Boarding</option>
+            }
+            else if (@Model.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Veterinary)
+            {
+                <option value="GeneralCheckup" selected="@(Model.Service.ServiceType.ToString() == "GeneralCheckup" ? "true" : null)">General Checkup</option>
+                <option value="Vaccination" selected="@(Model.Service.ServiceType.ToString() == "Vaccination" ? "true" : null)">Vaccination</option>
+                <option value="Surgery" selected="@(Model.Service.ServiceType.ToString() == "Surgery" ? "true" : null)">Surgery</option>
+            }
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="targetAnimal">Target Animal:</label>
+        <select id="targetAnimal" name="TargetAnimal" required>
+            <option value="" disabled selected>Select a target animal</option>
+            <option value="Dog" selected="@(Model.Service.TargetAnimal.ToString() == "Dog" ? "true" : null)">Dog</option>
+            <option value="Cat" selected="@(Model.Service.TargetAnimal.ToString() == "Cat" ? "true" : null)">Cat</option>
+            <option value="Bird" selected="@(Model.Service.TargetAnimal.ToString() == "Bird" ? "true" : null)">Bird</option>
+            <option value="Reptile" selected="@(Model.Service.TargetAnimal.ToString() == "Reptile" ? "true" : null)">Reptile</option>
+            <option value="Other" selected="@(Model.Service.TargetAnimal.ToString() == "Other" ? "true" : null)">Other</option>
+        </select>
+    </div>
+
+    <button type="submit">Save Changes</button>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById('updateServiceForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const id = formData.get('ServiceId');
+            const providerId = formData.get('ProviderId');
+
+            // Convert price to use "." as the decimal separator
+            let price = formData.get('Price').replace(',', '.');
+            if (isNaN(price)) {
+                alert("Invalid price format. Please use a numeric value.");
+                return;
+            }
+
+            const data = {
+                Id: parseInt(id),
+                PetServiceProviderId: parseInt(providerId),
+                Name: formData.get('Name'),
+                Description: formData.get('Description'),
+                Price: parseFloat(price), // Ensure it's sent as a number
+                ServiceType: formData.get('ServiceType'),
+                TargetAnimal: formData.get('TargetAnimal'),
+            };
+
+            const response = await fetch('/api/admin/service/update/' + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                window.location.href = '/api/admin/ManageProvider/' + providerId;
+            } else {
+                alert("Error updating service: " + await response.text());
+            }
+        });
+    </script>
+}

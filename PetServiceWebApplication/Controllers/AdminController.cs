@@ -142,21 +142,26 @@ namespace PetServiceWebApplication.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingService = _context.Services
-                .Include(s => s.PetServiceProvider)
-                .FirstOrDefault(s => s.Id == id);
-            if (existingService == null || existingService.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
+            //var existingService = _context.Services
+            //    .Include(s => s.PetServiceProvider)
+            //    .FirstOrDefault(s => s.Id == id);
+            //if (existingService == null || existingService.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
+            //    return NotFound();
 
-            existingService.Name = service.Name;
-            existingService.Description = service.Description;
-            existingService.Price = service.Price;
-            existingService.Duration = service.Duration;
-            existingService.ServiceType = service.ServiceType;
-            existingService.TargetAnimal = service.TargetAnimal;
-            existingService.IsActive = service.IsActive;
+            _context.Entry(service).State = EntityState.Modified;
 
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.PetServiceProviders.Any(p => p.Id == id))
+                    return NotFound($"Provider with ID {id} not found.");
+                throw;
+            }
+
+
             return NoContent();
         }
 
@@ -223,6 +228,27 @@ namespace PetServiceWebApplication.Controllers
             };
 
             return View("ManageProvider", model);
+        }
+
+        [HttpGet("ManageProvider/UpdateService/{id}")]
+        public async Task<IActionResult> GetServiceWithProviderCategory(int id)
+        {
+            var service = await _context.Services
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (service == null)
+                return NotFound($"No service found with ID {id}.");
+
+            var provider = await _context.PetServiceProviders
+                .FirstAsync(p => p.Id == service.PetServiceProviderId);
+
+            var model = new ServiceUpdateDTO
+            {
+                Service = service,
+                Category = provider.Category,
+            };
+
+            return View("UpdateService", model);
         }
     }
 }

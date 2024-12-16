@@ -22,7 +22,7 @@ namespace PetServiceWebApplication.Models
 
         [Required]
         [Range(typeof(TimeSpan), "00:05:00", "24:00:00", ErrorMessage = "Service duration must be between 5 minutes and 24 hours.")]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan Duration { get; set; } = new TimeSpan(0, 10, 0);
 
         [Required]
         public required ServiceType ServiceType { get; set; }
@@ -30,7 +30,7 @@ namespace PetServiceWebApplication.Models
         public int PetServiceProviderId { get; set; }
 
         [JsonIgnore]
-        public required PetServiceProvider PetServiceProvider { get; set; }
+        public PetServiceProvider? PetServiceProvider { get; set; }
 
         public bool IsActive { get; set; } = true;
 
