@@ -85,6 +85,72 @@ footer p:first-child {
     line-height: 1.5;
 }
 
+.navbar-brand {
+    font-size: 2rem; 
+    font-weight: 700;
+    color: #36b2a3 !important;
+    letter-spacing: 1px;
+}
+
+    .navbar-brand:hover {
+        color: #2a9484 !important;
+    }
+
+.navbar-nav .nav-link {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #36b2a3 !important;
+    margin-right: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+    .navbar-nav .nav-link:hover {
+        color: #2a9484 !important;
+    }
+
+.nav-link.dropdown-toggle::after {
+    display: none;
+}
+
+.nav-link i {
+    color: #36b2a3; 
+    font-size: 1.8rem;
+    transition: color 0.3s ease;
+}
+
+
+.nav-link:hover i {
+    color: #2a9484 !important;
+}
+
+.dropdown-header {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #36b2a3;
+    padding: 8px 15px;
+}
+
+/* Dropdown Logout Button Styling */
+form .logout-item {
+    border: none;
+    background: none;
+    color: #dc3545; /* Red for logout */
+    width: 100%;
+    text-align: left;
+    padding: 8px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1rem;
+}
+
+    form .logout-item:hover {
+        background-color: #36b2a3;
+        color: #ffffff;
+        cursor: pointer;
+    }
+
+
 /* Forms */
 .form-title {
     font-size: 1rem;
@@ -123,6 +189,22 @@ footer p:first-child {
         outline: none;
         box-shadow: 0 0 5px rgba(54, 178, 163, 0.5);
     }
+
+option {
+    background-color: #e7f2f0;
+    color: #2a9484;
+}
+
+    option:hover {
+        background-color: #36b2a3 !important;
+    }
+
+
+select option:hover,
+select option:focus {
+    background-color: #36b2a3 !important;
+    color: white;
+}
 
 
 /* Search button */

@@ -1,177 +1,166 @@
 ﻿@model PetServiceWebApplication.Models.ProviderInfoDTO
 
-<style>
-    #addProviderForm {
-        display: flex;
-        flex-direction: column;
-        max-width: 400px;
-        gap: 10px;
-    }
+<link rel="stylesheet" href="~/css/admin.css" />
 
-        #addProviderForm label {
-            margin-bottom: 5px;
-        }
+<div class="admin-container">
+    <!-- Two-Column Layout -->
+    <div class="admin-grid">
 
-    .form-group {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        <!-- Left Column: Update Provider -->
+        <div class="admin-section">
+            <h2 class="admin-title">Update Provider</h2>
+            <form id="updateProviderForm">
+                <input type="hidden" name="Id" id="updateProviderId" value="@Model.Provider.Id" />
 
-        .form-group label {
-            flex: 1;
-        }
+                <div class="form-group">
+                    <label for="updateName">Name:</label>
+                    <input type="text" name="Name" id="updateName" value="@Model.Provider.Name" />
+                </div>
 
-        .form-group input, .form-group select {
-            flex: 2;
-            padding: 5px;
-        }
+                <div class="form-group">
+                    <label for="updateAddress">Address:</label>
+                    <input type="text" name="Address" id="updateAddress" value="@Model.Provider.Address" />
+                </div>
 
-</style>
+                <div class="form-group">
+                    <label for="updatePhone">Phone:</label>
+                    <input type="text" name="Phone" id="updatePhone" value="@Model.Provider.Phone" />
+                </div>
 
-<form id="updateProviderForm">
-    <input type="hidden" name="Id" id="updateProviderId" value="@Model.Provider.Id" />
-    
-    <div class="form-group">
-        <label for="updateName">Name:</label>
-        <input type="text" name="Name" id="updateName" value="@Model.Provider.Name" />
+                <div class="form-group">
+                    <label for="updateEmail">Email:</label>
+                    <input type="text" name="Email" id="updateEmail" value="@Model.Provider.Email" />
+                </div>
+
+                <div class="form-group">
+                    <label for="updateCategory">Category:</label>
+                    <select id="updateCategory" name="Category">
+                        <option value="" disabled selected>Select a category</option>
+                        @foreach (var category in Enum.GetValues(typeof(PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory)))
+                        {
+                            <option value="@category" selected="@(Model.Provider.Category == (PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory)category ? "true" : null)">@category</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="updateDescription">Description:</label>
+                    <textarea name="Description" id="updateDescription" rows="3">@Model.Provider.Description</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="updateImageUrl">Image URL:</label>
+                    <input type="text" name="ImageUrl" id="updateImageUrl" value="@Model.Provider.Image" />
+                </div>
+
+                <button type="submit" class="admin-btn">Save Changes</button>
+            </form>
+        </div>
+
+        <!-- Right Column: Services -->
+        <div class="admin-section">
+            <h2 class="admin-title">Services</h2>
+
+            <!-- Services Table -->
+            <div id="tableContainer" @(Model.Services.Any() ? "style=display:block;" : "style=display:none")>
+                <table id="servicesTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Type</th>
+                            <th>Animal</th>
+                            <th>Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var service in Model.Services)
+                        {
+                            <tr>
+                                <td>@service.Name</td>
+                                <td>@service.Description</td>
+                                <td>@service.Price €</td>
+                                <td>@service.ServiceType</td>
+                                <td>@service.TargetAnimal</td>
+                                <td><a href="UpdateService/@service.Id" class="manage-link">Manage</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div id="noProvidersMessage" @(Model.Services.Any() ? "style=display:none;" : "style=display:block")>
+                No Services found.
+            </div>
+
+            <!-- Add New Service Form -->
+            <h3 class="admin-subtitle">Add New Service</h3>
+            <form id="addServiceForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="Name" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="Description" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="text" id="price" name="Price" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="serviceType">Service Type:</label>
+                    <select id="serviceType" name="ServiceType" required>
+                        <option value="" disabled selected>Select a service type</option>
+                        @if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Grooming)
+                        {
+                            <option value="BasicGrooming">Grooming</option>
+                            <option value="AdvancedGrooming">Advanced Grooming</option>
+                            <option value="DeluxeGrooming">Deluxe Grooming</option>
+                        }
+                        else if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Training)
+                        {
+                            <option value="BasicTraining">Basic Training</option>
+                            <option value="ObedienceTraining">Obedience Training</option>
+                            <option value="AdvancedTraining">Advanced Training</option>
+                        }
+                        else if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Boarding)
+                        {
+                            <option value="ShortTermBoarding">Short Term Boarding</option>
+                            <option value="LongTermBoarding">Long Term Boarding</option>
+                            <option value="SpecialCareBoarding">Special Care Boarding</option>
+                        }
+                        else if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Veterinary)
+                        {
+                            <option value="GeneralCheckup">General Checkup</option>
+                            <option value="Vaccination">Vaccination</option>
+                            <option value="Surgery">Surgery</option>
+                        }
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="targetAnimal">Target Animal:</label>
+                    <select id="targetAnimal" name="TargetAnimal" required>
+                        <option value="" disabled selected>Select a target animal</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Bird">Bird</option>
+                        <option value="Reptile">Reptile</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="admin-btn">Add Service</button>
+            </form>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="updateAddress">Address:</label>
-        <input type="text" name="Address" id="updateAddress" value="@Model.Provider.Address" />
-    </div>
-
-    <div class="form-group">
-        <label for="updatePhone">Phone:</label>
-        <input type="text" name="Phone" id="updatePhone" value="@Model.Provider.Phone" />
-    </div>
-
-    <div class="form-group">
-        <label for="updateEmail">Email:</label>
-        <input type="text" name="Email" id="updateEmail" value="@Model.Provider.Email" />
-    </div>
-
-    <div class="form-group">
-        <label for="updateCategory">Category:</label>
-        <select id="updateCategory" name="Category">
-            <option value="" disabled selected="@(Model.Provider.Category == null ? "true" : null)">Select a category</option>
-            @foreach (var category in Enum.GetValues(typeof(PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory)))
-            {
-                <option value="@category" selected="@(Model.Provider.Category == (PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory)category ? "true" : null)">@category</option>
-            }
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="updateDescription">Description:</label>
-        <input type="text" name="Description" id="updateDescription" value="@Model.Provider.Description" />
-    </div>
-
-    <div class="form-group">
-        <label for="updateImageUrl">Image Url:</label>
-        <input type="text" name="ImageUrl" id="updateImageUrl" value="@Model.Provider.Image" />
-    </div>
-    
-    <button type="submit">Save Changes</button>
-</form>
-
-<h1>Services</h1>
-
-<br />
-
-<!-- Display the list of services -->
-<div id="tableContainer" @(Model.Services.Any() ? "style=display:block;" : "style=display:none")>
-    <table id="servicesTable" class="table" border="1" style="width:100%; text-align:left;">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Type</th>
-                <th>Animal</th>
-                <th>Manage</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var service in Model.Services)
-            {
-                <tr>
-                    <td>@service.Name</td>
-                    <td>@service.Description</td>
-                    <td>@service.Price €</td>
-                    <td>@service.ServiceType</td>
-                    <td>@service.TargetAnimal</td>
-                    <td><a href="UpdateService/@service.Id">Manage</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
 
-<div id="noProvidersMessage" @(Model.Services.Any() ? "style=display:none;" : "style=display:block")>No Services found.</div>
-
-<br />
-
-<h3>Add new service</h3>
-
-<form id="addServiceForm">
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="Name" required />
-    </div>
-    <div class="form-group">
-        <label for="description">Description:</label>
-        <input type="text" id="description" name="Description" required />
-    </div>
-    <div class="form-group">
-        <label for="price">Price:</label>
-        <input type="text" id="price" name="Price" required />
-    </div>
-    <div class="form-group">
-        <label for="serviceType">Service Type:</label>
-        <select id="serviceType" name="ServiceType" required>
-            <option value="" disabled selected>Select a service type</option>
-
-            @if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Grooming)
-            {
-                <option value="BasicGrooming">Grooming</option>
-                <option value="AdvancedGrooming">Advanced Grooming</option>
-                <option value="DeluxeGrooming">Deluxe Grooming</option>
-            }
-            else if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Training)
-            {
-                <option value="BasicTraining">Basic Training</option>
-                <option value="ObedienceTraining">Obedience Training</option>
-                <option value="AdvancedTraining">Advanced Training</option>
-            }
-            else if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Boarding)
-            {
-                <option value="ShortTermBoarding">Short Term Boarding</option>
-                <option value="LongTermBoarding">Long Term Boarding</option>
-                <option value="SpecialCareBoarding">Special Care Boarding</option>
-            }
-            else if (@Model.Provider.Category == PetServiceWebApplication.Models.PetServiceProvider.ProviderCategory.Veterinary)
-            {
-                <option value="GeneralCheckup">General Checkup</option>
-                <option value="Vaccination">Vaccination</option>
-                <option value="Surgery">Surgery</option>
-            }
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="targetAnimal">Target Animal:</label>
-        <select id="targetAnimal" name="TargetAnimal" required>
-            <option value="" disabled selected>Select a target animal</option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-            <option value="Bird">Bird</option>
-            <option value="Reptile">Reptile</option>
-            <option value="Other">Other</option>
-        </select>
-    </div>
-    <button type="submit">Add a Service</button>
-</form>
 
 @section Scripts {
     <script>

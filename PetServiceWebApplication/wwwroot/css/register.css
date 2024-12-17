@@ -1,0 +1,186 @@
+﻿/* Full-Page Layout */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    overflow: hidden; /* Prevent unnecessary scroll */
+}
+
+.register-page {
+    display: flex;
+    height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Welcome Panel */
+.register-welcome {
+    flex: 1;
+    background-color: #36b2a3;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.welcome-text {
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* Register Form Panel */
+.register-form-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+}
+
+.register-form {
+    width: 100%;
+    max-width: 400px;
+}
+
+.register-heading {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Input Group with Icons */
+.register-input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.register-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px; /* Space for icon */
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 1rem;
+    height: 45px; /* Fixed height for consistent look */
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .register-input:focus {
+        border-color: #36b2a3;
+        box-shadow: 0 0 5px rgba(54, 178, 163, 0.5);
+    }
+
+    .register-input.input-validation-error {
+        border-color: #d9534f; /* Red border for errors */
+        box-shadow: 0 0 5px rgba(217, 83, 79, 0.5);
+    }
+
+        .register-input.input-validation-error:focus {
+            border-color: #c9302c;
+            box-shadow: 0 0 8px rgba(201, 48, 44, 0.7);
+        }
+
+.register-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%); /* Vertically centered */
+    color: #aaa;
+    pointer-events: none; /* Prevent interaction */
+    font-size: 1.2rem;
+}
+
+/* Validation Messages Below Fields */
+span.text-danger {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    color: #d9534f;
+    position: absolute;
+    top: 100%; /* Below the input */
+    left: 10px;
+    line-height: 1.2;
+}
+
+/* Submit Button */
+.register-btn {
+    background-color: #36b2a3;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+    .register-btn:hover {
+        background-color: #2a9484;
+    }
+
+/* Links */
+.text-link {
+    color: #36b2a3;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+    .text-link:hover {
+        text-decoration: underline;
+        color: #2a9484;
+    }
+
+.signup-link {
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* Validation Summary */
+.validation-summary-errors {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}
+
+.text-danger {
+    color: #d9534f; /* Red for validation errors */
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* Back Arrow Styling */
+.back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 1rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+    .back-arrow i {
+        margin-right: 8px;
+        font-size: 1.2rem;
+    }
+
+    .back-arrow:hover {
+        color: #cce7e5;
+    }

@@ -3,24 +3,37 @@
 @inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+            <!-- Dropdown Trigger: Account Icon -->
+            <a class="nav-link" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account Menu">
+                <i class="fa-solid fa-user-circle account-icon"></i>
+            </a>
+
+            <!-- Dropdown Menu -->
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                <!-- Greeting -->
+                <li class="dropdown-header">Hello @User.Identity?.Name!</li>
+
+                <!-- Logout Button -->
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")" method="post" class="m-0 p-0">
+                        <button type="submit" class="dropdown-item logout-item">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+
+    }
+    else
+    {
+        <!-- Direct Link to Login Page for Not Logged-in Users -->
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login" title="Login">
+                <i class="fa-solid fa-user-circle" style="color: #36b2a3; font-size: 1.8rem;"></i>
+            </a>
+        </li>
+    }
 </ul>
+
