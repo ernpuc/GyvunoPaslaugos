@@ -1,71 +1,238 @@
-/*html {
-  font-size: 14px;
-}*/
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 
-/* Center the providers container vertically */
-/*.providers-container {
+/* Header */
+header a.btn-link {
+    font-size: 1rem;
+    color: #36b2a3;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+header a.btn-link:hover {
+    color: #2a9484;
+    text-decoration: none;
+}
+
+header {
+    width: 100%;
+    position: relative;
+}
+
+/* Footer */
+footer {
+    background-color: #36b2a3;
+    color: white;
+    padding: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer p:first-child {
+    font-size: 1.25rem;
+}
+
+.outer-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 80vh;*/ /* Adjust to control vertical centering */
-/*}*/
+    min-height: 100%;
+}
 
-/* Style each provider item */
-/*.provider {
+.pb-3{
     display: flex;
+    justify-content: center;
     align-items: center;
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    width: 80%;*/ /* Control width of each item */
-    /*max-width: 600px;
-}*/
+    padding-top:40px
+}
 
-/* Style the provider image */
-/*.provider-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 10%;
-    margin-right: 20px;
-}*/
+.container_main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+}
 
-/* Align text information to the right of the image */
-/*.provider-info {
+.content-section {
+    max-width: 600px;
+}
+
+.image-section img {
+    max-width: 100%;
+    height: 70vh;    
+}
+
+/* Typography */
+.main-heading {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.sub-heading {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Forms */
+.form-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #36b2a3;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px; 
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 1.2rem;
+}
+
+.form-control {
+    padding-left: 45px;
+    height: 50px;
+    border-radius: 25px;
+    background-color: #e7e7e7;
+    border: 1px solid transparent;
+}
+
+    .form-control:focus {
+        border-color: #36b2a3;
+        outline: none;
+        box-shadow: 0 0 5px rgba(54, 178, 163, 0.5);
+    }
+
+
+/* Search button */
+.search-button {
+    background-color: #36b2a3;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 0;
+    font-size: 1rem;
+    width: 100%;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+    .search-button:hover {
+        background-color: #2a9484;
+    }
+
+/* Form links */
+.form-links a, .signup-link a {
+    color: #36b2a3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+
+/* Login */
+.login-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.welcome-section {
+    flex: 1;
+    background-color: #36b2a3;
     display: flex;
     flex-direction: column;
     justify-content: center;
-}*/
-
-/* Optional: Add some spacing and styling to text */
-/*.provider-info h3 {
-    margin: 0;
-    font-size: 1.2em;
+    align-items: center;
+    color: white;
+    padding: 20px;
 }
 
-.provider-info p {
-    margin: 4px 0;
-    color: #555;
+    .welcome-section h1, .welcome-section h2 {
+        margin: 0;
+    }
+
+.login-form-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+    .login-form-section h2 {
+        color: #36b2a3;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+    }
+
+.login-button {
+    background-color: #36b2a3;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 0;
+    width: 100%;
+    max-width: 300px;
+    font-size: 1rem;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #2a9484;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 15px;
 }
 
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+
+/* Utility Classes */
+.border-top {
+    border-top: 1px solid #e5e5e5;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.box-shadow {
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
 }
 
-body {
-  margin-bottom: 60px;
-}*/
+a {
+    color: #0077cc;
+}
+
+    a.navbar-brand {
+        white-space: normal;
+        text-align: center;
+        word-break: break-word;
+    }
+
+button.accept-policy {
+    font-size: 1rem;
+}

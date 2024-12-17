@@ -13,7 +13,6 @@
         {
             <div style="cursor: pointer" class="row mb-4 p-3 border rounded bg-light shadow-sm"
                  onclick="window.location.href='@Url.Action("GetProviderWithServices", "PetServiceProvider", new { id = provider.Id })'">
-                <!-- Clinic Info -->
                 <div class="col-md-8">
                     <h3 class="text-primary">@provider.Name</h3>
                     <p>
@@ -22,7 +21,6 @@
                         <i class="bi bi-envelope"></i> <a href="mailto:@provider.Email">@provider.Email</a>
                     </p>
                 </div>
-                <!-- Placeholder for Provider Image -->
                 <div class="col-md-4 d-flex align-items-center">
                     <img src=provider.Image class="img-fluid rounded" alt="Provider Image">
                 </div>
