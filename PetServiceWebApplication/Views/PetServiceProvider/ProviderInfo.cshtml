@@ -1,43 +1,53 @@
 ﻿@model PetServiceWebApplication.Models.ProviderInfoDTO
 
-<div class="container py-5">
+@{
+    ViewData["Title"] = "Provider Info";
+}
+
+<link rel="stylesheet" href="~/css/providerdetails.css" />
+
+<div class="provider-details-page container py-5">
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="text-primary">@Model.Provider.Name</h1>
+            <h1 class="provider-header">@Model.Provider.Name</h1>
             <p>
-                <i class="bi bi-geo-alt"></i> @Model.Provider.Address <br/>
-                <i class="bi bi-telephone"></i> @Model.Provider.Phone <br/>
-                <i class="bi bi-envelope"></i> <a href="mailto:@Model.Provider.Email">@Model.Provider.Email</a> <br/>
+                <i class="fa-solid fa-location-dot"></i> @Model.Provider.Address <br />
+                <i class="fa-solid fa-phone"></i> @Model.Provider.Phone <br />
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:@Model.Provider.Email">@Model.Provider.Email</a> <br />
             </p>
+            <div class="average-rating">
+                <span class="rating-label">Average Rating:</span>
+                <span class="stars" data-rating="@Model.Provider.Rating"></span>
+            </div>
         </div>
-        <ul>
-            @foreach (var service in Model.Services)
-            {
-                <li>
-                    <h5>@service.Name</h5>
-                    <p>@service.Description</p>
-                    <p><strong>Price:</strong> @service.Price €</p>
-                </li>
-            }
-        </ul>
         <div class="col-md-4">
-            <img src="@Model.Provider.Image" alt="Provider Image" style="max-width: 200px; height: auto;" />
+            <img src="@Model.Provider.Image" alt="Provider Image" class="provider-image" />
         </div>
+    </div>
 
-        <hr />
+    <div class="services-list">
+        <h2 class="section-header">Services</h2>
+        @foreach (var service in Model.Services)
+        {
+            <div class="service-card">
+                <h5>@service.Name</h5>
+                <p>@service.Description</p>
+                <p><strong>Price:</strong> @service.Price €</p>
+            </div>
+        }
+    </div>
 
-        <div>
-            <h2>Reviews</h2>
-            <p><strong>Average Rating: @Model.Provider.Rating.ToString("0.0")</strong> </p>
-        </div>
+    <div class="reviews-section">
+        <h2 class="section-header">Reviews</h2>
 
         @if (!Model.Provider.Reviews.Any())
         {
-            <p>No reviews have been submitted for this service provider yet.</p>
+            <p>No reviews yet.</p>
         }
         else
         {
-            <table class="table table-striped table-bordered">
+            <table class="reviews-table table">
                 <thead>
                     <tr>
                         <th>Comment</th>
@@ -51,25 +61,28 @@
                         <tr>
                             <td>@review.Comment</td>
                             <td>@review.Rating</td>
-                            <td>@review.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            <td>@review.Date.ToString("yyyy-MM-dd HH:mm")</td>
                         </tr>
                     }
                 </tbody>
             </table>
         }
+    </div>
 
-        <h3>Add a New Review</h3>
-        <div>
+    <div class="add-review">
+        <h3 class="section-header">Add a New Review</h3>
+        <div class="form-group">
             <label for="newRating">Rating (1-5):</label>
-            <input type="number" id="newRating" min="1" max="5" required />
+            <input type="number" id="newRating" class="form-control" min="1" max="5" required />
         </div>
-        <div>
+        <div class="form-group">
             <label for="newComment">Comment:</label>
-            <textarea id="newComment" rows="3" required></textarea>
+            <textarea id="newComment" class="form-control" rows="3" required></textarea>
         </div>
-        <button type="button" id="submitReviewBtn">Submit Review</button>
+        <button type="button" id="submitReviewBtn" class="btn submit-btn">Submit Review</button>
     </div>
 </div>
+
 
 <script>
     document.getElementById('submitReviewBtn').addEventListener('click', function () {
@@ -84,26 +97,51 @@
             Comment: comment
         };
 
-        fetch('/api/Review/Create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text); });
+    fetch('/api/Review/Create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (response.status === 401) {
+            throw new Error("You have to be logged in to leave a review.");
+        }
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log("Review created:", result);
+        alert("Review submitted successfully!");
+        window.location.reload();
+    })
+    .catch(err => {
+        console.error("Error creating review:", err.message);
+        alert(err.message);
+    });
+
+    });
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const starsContainer = document.querySelector('.stars');
+        const rating = parseFloat(starsContainer.getAttribute('data-rating')) || 0;
+
+        const maxStars = 5;
+        let starsHtml = '';
+
+        for (let i = 1; i <= maxStars; i++) {
+            if (i <= Math.floor(rating)) {
+                starsHtml += '<i class="fa-solid fa-star filled-star"></i>';
+            } else if (i - 0.5 <= rating) {
+                starsHtml += '<i class="fa-solid fa-star-half-stroke filled-star"></i>';
+            } else {
+                starsHtml += '<i class="fa-regular fa-star empty-star"></i>';
             }
-            return response.json();
-        })
-        .then(result => {
-            console.log("Review created:", result);
-            window.location.reload();
-        })
-        .catch(err => {
-            console.error("Error creating review:", err);
-            alert("Could not create review. See console for details.");
-        });
+        }
+
+        starsContainer.innerHTML = starsHtml;
     });
 </script>
