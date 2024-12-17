@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PetServiceWebApplication.Data;
@@ -33,15 +34,34 @@ namespace PetServiceWebApplication.Controllers
         }
 
         [HttpPost("provider/add")]
-        public IActionResult AddProvider([FromBody] PetServiceProvider provider)
+        public IActionResult AddProvider([FromForm] ProviderImageDTO dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            string imagePath = null;
 
-            provider.ApplicationUserId = GetCurrentUserId();
-            _context.PetServiceProviders.Add(provider);
+            // Handle File Upload
+            if (dto.ImageFile != null && dto.ImageFile.Length > 0)
+            {
+                var fileName = Path.GetFileName(dto.ImageFile.FileName);
+                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProviderImages", fileName);
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    dto.ImageFile.CopyTo(stream);
+                }
+
+                imagePath = "/ProviderImages/" + fileName;
+            }
+            // Handle Image URL
+            else if (!string.IsNullOrEmpty(dto.ImageUrl))
+            {
+                imagePath = dto.ImageUrl;
+            }
+            
+            dto.Provider.Image = imagePath;
+            dto.Provider.ApplicationUserId = GetCurrentUserId();
+            _context.PetServiceProviders.Add(dto.Provider);
             _context.SaveChanges();
-            return CreatedAtAction(nameof(GetProviderById), new { id = provider.Id }, provider);
+            return Ok(new { success = true, message = "Provider added successfully." });
         }
 
         [HttpGet("provider/{id}")]

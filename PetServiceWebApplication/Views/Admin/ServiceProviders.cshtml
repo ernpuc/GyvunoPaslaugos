@@ -74,7 +74,7 @@
 
 <h3>Add new service provider</h3>
 
-<form id="addProviderForm">
+<form id="addProviderForm" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" id="name" name="Name" required />
@@ -105,19 +105,14 @@
         <label for="description">Description:</label>
         <input type="text" id="description" name="Description" />
     </div>
-    <div class="form-group">
-        <label for="imageUrl">Image Url:</label>
-        <input type="text" id="imageUrl" name="ImageUrl" />
+    <div>
+        <label>Upload Image</label>
+        <input type="file" name="ImageFile" id="ImageFile" />
     </div>
-@*     <div class="form-group">
-        <label for="openingTime">Opening Time:</label>
-        <input type="time" name="OpeningTime" value="09:00" />
+    <div>
+        <label>Or Image URL</label>
+        <input type="text" name="ImageUrl" placeholder="Image URL" />
     </div>
-    <div class="form-group">
-        <label for="closingTime">Closing Time:</label>
-        <input type="time" name="ClosingTime" value="17:00" />
-    </div> *@
-
     <button type="submit">Add Service Provider</button>
 </form>
 
@@ -161,28 +156,34 @@
         $('#addProviderForm').on('submit', function (event) {
             event.preventDefault();
 
-            // Gather form data
-            const newProvider = {
-                ApplicationUserId: "tmp",
-                Name: $('input[name="Name"]').val(),
-                Address: $('input[name="Address"]').val(),
-                Phone: $('input[name="Phone"]').val(),
-                Email: $('input[name="Email"]').val(),
-                Category: $('select[name="Category"]').val(),
-                Description: $('input[name="Description"]').val(),
-                Image: $('input[name="ImageUrl"]').val()
-                // OpeningTime: $('input[name="OpeningTime"]').val(),
-                // ClosingTime: $('input[name="ClosingTime"]').val()
-            };
+            const formData = new FormData();
 
-            console.log(JSON.stringify(newProvider));
+            formData.append("Provider.ApplicationUserId", "tmp");
+            formData.append("Provider.Name", $('input[name="Name"]').val());
+            formData.append("Provider.Address", $('input[name="Address"]').val());
+            formData.append("Provider.Phone", $('input[name="Phone"]').val());
+            formData.append("Provider.Email", $('input[name="Email"]').val());
+            formData.append("Provider.Category", $('select[name="Category"]').val());
+            formData.append("Provider.Description", $('input[name="Description"]').val());
+
+            // Handle File Upload or Image URL
+            const imageFile = $('#ImageFile')[0].files[0];
+            const imageUrl = $('input[name="ImageUrl"]').val();
+
+            if (imageFile) {
+                formData.append("ImageFile", imageFile);
+            } else if (imageUrl) {
+                formData.append("ImageUrl", imageUrl);
+            }
 
             $.ajax({
                 url: '/api/admin/provider/add',
                 type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(newProvider),
-                success: function (data) {
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response.message);
                     loadServiceProviders();
                 },
                 error: function () {
