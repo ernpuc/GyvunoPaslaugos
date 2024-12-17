@@ -14,13 +14,14 @@ namespace PetServiceWebApplication.Models
         [StringLength(1000)]
         public string? Comment { get; set; }
 
-        public required DateTime Date { get; set; }
+        public DateTime Date { get; set; }
 
         public int PetServiceProviderId { get; set; }
         [JsonIgnore]
-        public required PetServiceProvider PetServiceProvider { get; set; }
+        public PetServiceProvider? PetServiceProvider { get; set; }
 
         public required string ApplicationUserId { get; set; }
-        public required ApplicationUser ApplicationUser { get; set; }
+        [JsonIgnore]
+        public ApplicationUser? ApplicationUser { get; set; }
     }
 }
