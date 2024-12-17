@@ -95,6 +95,26 @@ namespace PetServiceWebApplication.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "f7c638da-17e3-4bcc-960f-706b8922c2d8",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e5d7c662-6e69-4cee-b633-424c60503642",
+                            Email = "admin@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Admin",
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@GMAIL.COM",
+                            NormalizedUserName = "ADMIN@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIGm6m3a+wEwsNGwUOyquwEmtqUkMpbT3xkccSyeBEPt/BRH0fiHDluJXU+zvgg0CA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "24c48fdb-d43e-4542-8961-d949d0343913",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -126,15 +146,21 @@ namespace PetServiceWebApplication.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c37f3fa1-b11d-47a3-a9cb-913d0a1dafb8",
+                            Id = "71e0ace6-27db-4891-947a-7af9634b6ad2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8d9f1a19-a589-41d0-85ab-88b61d25a70f",
+                            Id = "7ecec5ed-2b44-406c-8ff3-4cbed083961f",
                             Name = "User",
                             NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "d5c866d9-eae9-4a14-99e9-d2a44fbd5d70",
+                            Name = "ServiceAdmin",
+                            NormalizedName = "SERVICEADMIN"
                         });
                 });
 
@@ -191,10 +217,12 @@ namespace PetServiceWebApplication.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -223,6 +251,13 @@ namespace PetServiceWebApplication.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "f7c638da-17e3-4bcc-960f-706b8922c2d8",
+                            RoleId = "71e0ace6-27db-4891-947a-7af9634b6ad2"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -231,10 +266,12 @@ namespace PetServiceWebApplication.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -296,12 +333,8 @@ namespace PetServiceWebApplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AvailableDays")
                         .IsRequired()
@@ -338,8 +371,6 @@ namespace PetServiceWebApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("PetServiceProviders");
                 });
@@ -494,17 +525,6 @@ namespace PetServiceWebApplication.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("PetServiceWebApplication.Models.PetServiceProvider", b =>
-                {
-                    b.HasOne("ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("PetServiceWebApplication.Models.Review", b =>

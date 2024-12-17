@@ -72,7 +72,6 @@ footer p:first-child {
     height: 70vh;    
 }
 
-/* Typography */
 .main-heading {
     font-size: 2.5rem;
     font-weight: 600;
@@ -132,11 +131,11 @@ footer p:first-child {
     padding: 8px 15px;
 }
 
-/* Dropdown Logout Button Styling */
+
 form .logout-item {
     border: none;
     background: none;
-    color: #dc3545; /* Red for logout */
+    color: #dc3545;
     width: 100%;
     text-align: left;
     padding: 8px 15px;
@@ -151,7 +150,6 @@ form .logout-item {
     }
 
 
-/* Forms */
 .form-title {
     font-size: 1rem;
     font-weight: 600;
@@ -223,7 +221,6 @@ select option:focus {
         background-color: #2a9484;
     }
 
-/* Form links */
 .form-links a, .signup-link a {
     color: #36b2a3;
     text-decoration: none;
@@ -292,7 +289,6 @@ select option:focus {
 
 
 
-/* Utility Classes */
 .border-top {
     border-top: 1px solid #e5e5e5;
 }

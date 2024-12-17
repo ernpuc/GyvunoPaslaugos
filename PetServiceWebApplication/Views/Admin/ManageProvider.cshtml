@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="~/css/admin.css" />
 
 <div class="admin-container">
-    <!-- Two-Column Layout -->
     <div class="admin-grid">
 
         <!-- Left Column: Update Provider -->
@@ -61,7 +60,6 @@
         <div class="admin-section">
             <h2 class="admin-title">Services</h2>
 
-            <!-- Services Table -->
             <div id="tableContainer" @(Model.Services.Any() ? "style=display:block;" : "style=display:none")>
                 <table id="servicesTable" class="table">
                     <thead>
@@ -93,7 +91,6 @@
                 No Services found.
             </div>
 
-            <!-- Add New Service Form -->
             <h3 class="admin-subtitle">Add New Service</h3>
             <form id="addServiceForm">
                 <div class="form-group">
@@ -193,12 +190,10 @@
             }
         });
 
-        // Handle form submission for adding a new service
         document.getElementById('addServiceForm').addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const providerId = window.location.pathname.split('/').pop();
-            // Gather form data
             const formData = new FormData(this);
 
             const data = {
