@@ -34,12 +34,19 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="ServiceProviders">Manage providers</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Booking" asp-action="List">My Bookings</a>
+                                </li>
                             }
                             else
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="PetServiceProvider" asp-action="SearchProvidersByCriteria" method="get">Service Providers</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Booking" asp-action="List">My Bookings</a>
+                                </li>
+
                             }
                         }
                         else

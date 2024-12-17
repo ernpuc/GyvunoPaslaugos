@@ -1,0 +1,36 @@
+﻿@model IEnumerable<PetServiceWebApplication.Models.Booking>
+
+<h1>Your Bookings</h1>
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Provider</th>
+                <th>Service</th>
+                <th>Service Date</th>
+                <th>Service Time</th>
+                <th>Booking Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var booking in Model)
+            {
+                <tr>
+                    <td><a href="@Url.Action("GetProviderWithServices", "PetServiceProvider", new { id = booking.Service.PetServiceProviderId })">View</a></td>
+                    <td>@booking.Service.Name</td>
+                    <td>@booking.RequestedServiceDate.ToShortDateString()</td>
+                    <td>@booking.RequestedServiceTime</td>
+                    <td>@booking.BookingDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        You have no bookings yet.
+    </div>
+}
