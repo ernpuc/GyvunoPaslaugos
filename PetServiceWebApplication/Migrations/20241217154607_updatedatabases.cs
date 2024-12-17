@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetServiceWebApplication.Migrations
 {
     /// <inheritdoc />
-    public partial class initialsetup : Migration
+    public partial class updatedatabases : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,29 @@ namespace PetServiceWebApplication.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PetServiceProviders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OpeningTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    ClosingTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    AvailableDays = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PetServiceProviders", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,36 +184,6 @@ namespace PetServiceWebApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PetServiceProviders",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OpeningTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    ClosingTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    AvailableDays = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdminId = table.Column<int>(type: "int", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PetServiceProviders", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PetServiceProviders_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Reviews",
                 columns: table => new
                 {
@@ -290,7 +283,7 @@ namespace PetServiceWebApplication.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "f7c638da-17e3-4bcc-960f-706b8922c2d8", 0, "543761f6-282a-4687-baa7-bbb32e89c3a9", "admin@gmail.com", true, "Admin", "User", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEABlUc+2x/WtN0X0VHpkcNHIJW1Wje6lw5xcbG83Q5BgWMmggmxZtEz0TOlXZC/bBQ==", null, false, "a05113a5-b4a9-479c-98de-42f58f89e456", false, "admin@gmail.com" });
+                values: new object[] { "f7c638da-17e3-4bcc-960f-706b8922c2d8", 0, "e5d7c662-6e69-4cee-b633-424c60503642", "admin@gmail.com", true, "Admin", "User", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEIGm6m3a+wEwsNGwUOyquwEmtqUkMpbT3xkccSyeBEPt/BRH0fiHDluJXU+zvgg0CA==", null, false, "24c48fdb-d43e-4542-8961-d949d0343913", false, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -347,11 +340,6 @@ namespace PetServiceWebApplication.Migrations
                 column: "ServiceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PetServiceProviders_ApplicationUserId",
-                table: "PetServiceProviders",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_ApplicationUserId",
                 table: "Reviews",
                 column: "ApplicationUserId");
@@ -398,10 +386,10 @@ namespace PetServiceWebApplication.Migrations
                 name: "Services");
 
             migrationBuilder.DropTable(
-                name: "PetServiceProviders");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "PetServiceProviders");
         }
     }
 }

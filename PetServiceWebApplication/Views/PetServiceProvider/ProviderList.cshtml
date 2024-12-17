@@ -1,6 +1,38 @@
 ﻿@model List<PetServiceWebApplication.Models.PetServiceProvider>
 
+@{
+    ViewData["Title"] = "Service Providers";
+}
+
+<link rel="stylesheet" href="~/css/providerlist.css" />
+
 <div class="container py-5">
+    <div class="search-container">
+        <form asp-controller="PetServiceProvider" asp-action="SearchProvidersByCriteria" method="get" class="search-form">
+            <div class="form-group">
+                <span class="form-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <select class="form-control" id="category" name="category">
+                    <option value="" selected>Select a service</option>
+                    <option value="Grooming">Grooming</option>
+                    <option value="Training">Training</option>
+                    <option value="Boarding">Boarding</option>
+                    <option value="Veterinary">Veterinary</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <span class="form-icon"><i class="fa-solid fa-location-dot"></i></span>
+                <input type="text" class="form-control" id="location" name="location" placeholder="Location">
+            </div>
+
+            <div class="search-button-container">
+                <button type="submit" class="search-button">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <h2 class="page-header">Service Providers</h2>
+
     @if (!Model.Any())
     {
         <div class="text-center">
@@ -11,18 +43,19 @@
     {
         @foreach (var provider in Model)
         {
-            <div style="cursor: pointer" class="row mb-4 p-3 border rounded bg-light shadow-sm"
+            <div class="provider-card"
                  onclick="window.location.href='@Url.Action("GetProviderWithServices", "PetServiceProvider", new { id = provider.Id })'">
-                <div class="col-md-8">
+                <div class="provider-info col-md-8">
                     <h3 class="text-primary">@provider.Name</h3>
                     <p>
-                        <i class="bi bi-geo-alt"></i> @provider.Address <br />
-                        <i class="bi bi-telephone"></i> @provider.Phone <br />
-                        <i class="bi bi-envelope"></i> <a href="mailto:@provider.Email">@provider.Email</a>
+                        <i class="fa-solid fa-location-dot text-secondary"></i> @provider.Address <br />
+                        <i class="fa-solid fa-phone text-secondary"></i> @provider.Phone <br />
+                        <i class="fa-solid fa-envelope text-secondary"></i>
+                        <a href="mailto:@provider.Email">@provider.Email</a>
                     </p>
                 </div>
-                <div class="col-md-4 d-flex align-items-center">
-                    <img src="@provider.Image" alt="Provider Image" style="max-width: 200px; height: auto;" />
+                <div class="provider-image">
+                    <img src="@provider.Image" alt="Provider Image" />
                 </div>
             </div>
         }

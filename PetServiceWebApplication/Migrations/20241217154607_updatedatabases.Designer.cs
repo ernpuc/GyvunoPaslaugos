@@ -12,8 +12,8 @@ using PetServiceWebApplication.Data;
 namespace PetServiceWebApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241110220549_initialsetup")]
-    partial class initialsetup
+    [Migration("20241217154607_updatedatabases")]
+    partial class updatedatabases
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,7 +104,7 @@ namespace PetServiceWebApplication.Migrations
                         {
                             Id = "f7c638da-17e3-4bcc-960f-706b8922c2d8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "543761f6-282a-4687-baa7-bbb32e89c3a9",
+                            ConcurrencyStamp = "e5d7c662-6e69-4cee-b633-424c60503642",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -112,9 +112,9 @@ namespace PetServiceWebApplication.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEABlUc+2x/WtN0X0VHpkcNHIJW1Wje6lw5xcbG83Q5BgWMmggmxZtEz0TOlXZC/bBQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIGm6m3a+wEwsNGwUOyquwEmtqUkMpbT3xkccSyeBEPt/BRH0fiHDluJXU+zvgg0CA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a05113a5-b4a9-479c-98de-42f58f89e456",
+                            SecurityStamp = "24c48fdb-d43e-4542-8961-d949d0343913",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -336,12 +336,8 @@ namespace PetServiceWebApplication.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AvailableDays")
                         .IsRequired()
@@ -378,8 +374,6 @@ namespace PetServiceWebApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("PetServiceProviders");
                 });
@@ -534,17 +528,6 @@ namespace PetServiceWebApplication.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("PetServiceWebApplication.Models.PetServiceProvider", b =>
-                {
-                    b.HasOne("ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
                 });
 
             modelBuilder.Entity("PetServiceWebApplication.Models.Review", b =>
