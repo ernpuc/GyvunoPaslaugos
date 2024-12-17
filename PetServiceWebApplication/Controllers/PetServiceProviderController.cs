@@ -103,10 +103,15 @@ public class PetServiceProviderController : Controller
     public async Task<IActionResult> GetProviderWithServices(int id)
     {
         var provider = await _context.PetServiceProviders
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         if (provider == null)
             return NotFound($"No provider found with ID {id}.");
+
+        provider.Reviews = provider.Reviews
+                               .OrderByDescending(r => r.Date)
+                               .ToList();
 
         var services = await _context.Services
             .Where(s => s.PetServiceProviderId == id)

@@ -66,19 +66,19 @@ public class ReviewController : Controller
         return Ok(reviews);
     }
 
-    [HttpPost]
+    [HttpPost("Create")]
     public async Task<IActionResult> CreateReview([FromBody] Review review)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var user = await _context.Users.FindAsync(review.ApplicationUserId);
+        var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
         var provider = await _context.PetServiceProviders.FindAsync(review.PetServiceProviderId);
 
-        if (user == null)
-            return NotFound($"User with ID {review.ApplicationUserId} not found.");
+        if (userId == null)
+            return Unauthorized("User must be logged in.");
         if (provider == null)
             return NotFound($"Provider with ID {review.PetServiceProviderId} not found.");
+
+        review.ApplicationUserId = userId;
+        review.Date = DateTime.UtcNow;
 
         _context.Reviews.Add(review);
         await _context.SaveChangesAsync();
