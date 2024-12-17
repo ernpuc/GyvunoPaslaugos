@@ -16,7 +16,7 @@
                 <li>
                     <h5>@service.Name</h5>
                     <p>@service.Description</p>
-                    <p><strong>Price:</strong> $@service.Price</p>
+                    <p><strong>Price:</strong> @service.Price €</p>
                     <a href="@Url.Action("GetReviewsByService", "Review", new { serviceId = service.Id })">
                         Reviews
                     </a>
