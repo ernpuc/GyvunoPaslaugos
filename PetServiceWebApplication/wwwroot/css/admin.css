@@ -1,17 +1,14 @@
-﻿/* General Container */
-.admin-container {
+﻿.admin-container {
     padding: 20px;
     background-color: #f8f9fa;
 }
 
-/* Grid Layout */
 .admin-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-/* Section Styling */
 .admin-section {
     background-color: #ffffff;
     border-radius: 8px;
@@ -34,7 +31,6 @@
     padding-bottom: 10px;
 }
 
-/* Form Styling */
 .form-group {
     margin-bottom: 15px;
 }
@@ -65,7 +61,6 @@
             outline: none;
         }
 
-/* Buttons */
 .admin-btn, .highlight-btn {
     background-color: #36b2a3;
     color: white;
@@ -85,14 +80,13 @@
     }
 
 .highlight-btn {
-    background-color: #28a745; /* Vibrant green for emphasis */
+    background-color: #28a745;
 }
 
     .highlight-btn:hover {
         background-color: #218838;
     }
 
-/* Table Styling */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -132,9 +126,6 @@
         text-decoration: underline;
     }
 
-
-
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .admin-grid {
         grid-template-columns: 1fr;

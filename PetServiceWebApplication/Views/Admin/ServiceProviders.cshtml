@@ -4,117 +4,78 @@
     ViewData["Title"] = "Service Providers";
 }
 
-<style>
-    #addProviderForm {
-        display: flex;
-        flex-direction: column;
-        max-width: 400px;
-        gap: 10px;
-    }
+<link rel="stylesheet" href="~/css/serviceproviders.css" />
 
-        #addProviderForm label {
-            margin-bottom: 5px;
-        }
 
-    .form-group {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+<div class="admin-container">
+    <div class="provider-table-section">
+        <h1>Pet Service Providers</h1>
+        <div id="tableContainer" style="display: none;">
+            <table id="providerTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        .form-group label {
-            flex: 1;
-        }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-        .form-group input, .form-group select {
-            flex: 2;
-            padding: 5px;
-        }
+    <div class="add-provider-form-section">
+        <h3>Add New Service Provider</h3>
+        <form id="addProviderForm" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="Name" required />
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="Address" required />
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="Phone" required />
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="Email" required />
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select id="category" name="Category" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="Grooming">Grooming</option>
+                    <option value="Training">Training</option>
+                    <option value="Boarding">Boarding</option>
+                    <option value="Veterinary">Veterinary</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="Description" />
+            </div>
+            <div class="file-upload-group">
+                <label for="ImageFile">Upload Image</label>
+                <input type="file" name="ImageFile" id="ImageFile" />
+            </div>
 
-    .time-input-container {
-        display: flex;
-        flex-direction: column;
-        width: 100px;
-    }
+            <div class="form-group-inline">
+                <label for="ImageUrl">Or Image URL</label>
+                <input type="text" name="ImageUrl" id="ImageUrl" placeholder="Image URL" />
+            </div>
 
-    .time-input {
-        width: 100%;
-        padding: 5px;
-        text-align: center;
-        font-size: 16px;
-        font-family: Arial, sans-serif;
-    }
-
-        .time-input::placeholder {
-            color: #aaa;
-        }
-</style>
-
-<h1>Pet Service Providers</h1>
-
-<br />
-
-<!-- Display the list of providers -->
-<div id="tableContainer" style="display:none">
-    <table id="providerTable" class="table" border="1" style="width:100%; text-align:left;">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Manage</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- provider rows will be dynamically populated here -->
-        </tbody>
-    </table>
+            <button type="submit">Add Service Provider</button>
+        </form>
+    </div>
 </div>
 
-<h3>Add new service provider</h3>
-
-<form id="addProviderForm" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="Name" required />
-    </div>
-    <div class="form-group">
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="Address" required />
-    </div>
-    <div class="form-group">
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="Phone" required />
-    </div>
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="Email" required />
-    </div>
-    <div class="form-group">
-        <label for="category">Category:</label>
-        <select id="category" name="Category" required>
-            <option value="" disabled selected>Select a category</option>
-            <option value="Grooming">Grooming</option>
-            <option value="Training">Training</option>
-            <option value="Boarding">Boarding</option>
-            <option value="Veterinary">Veterinary</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="description">Description:</label>
-        <input type="text" id="description" name="Description" />
-    </div>
-    <div>
-        <label>Upload Image</label>
-        <input type="file" name="ImageFile" id="ImageFile" />
-    </div>
-    <div>
-        <label>Or Image URL</label>
-        <input type="text" name="ImageUrl" placeholder="Image URL" />
-    </div>
-    <button type="submit">Add Service Provider</button>
-</form>
 
 
 <script>
@@ -149,10 +110,8 @@
             });
         }
 
-        // Load providers when the page loads
         loadServiceProviders();
 
-        // Handle form submission for adding a new provider
         $('#addProviderForm').on('submit', function (event) {
             event.preventDefault();
 
@@ -166,7 +125,6 @@
             formData.append("Provider.Category", $('select[name="Category"]').val());
             formData.append("Provider.Description", $('input[name="Description"]').val());
 
-            // Handle File Upload or Image URL
             const imageFile = $('#ImageFile')[0].files[0];
             const imageUrl = $('input[name="ImageUrl"]').val();
 
