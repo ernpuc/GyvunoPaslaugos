@@ -44,56 +44,44 @@ public class ServiceController : Controller
         return Ok(services);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateService([FromBody] Service service)
-    {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+    //[HttpPost]
+    //public async Task<IActionResult> CreateService([FromBody] Service service)
+    //{
+    //    if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        var clinic = await _context.PetServiceProviders.FindAsync(service.PetServiceProviderId);
-        if (clinic == null)
-            return NotFound($"Service provider with ID {service.PetServiceProviderId} not found.");
+    //    var clinic = await _context.PetServiceProviders.FindAsync(service.PetServiceProviderId);
+    //    if (clinic == null)
+    //        return NotFound($"Service provider with ID {service.PetServiceProviderId} not found.");
 
-        _context.Services.Add(service);
-        await _context.SaveChangesAsync();
+    //    _context.Services.Add(service);
+    //    await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetServiceById), new { id = service.Id }, service);
-    }
+    //    return CreatedAtAction(nameof(GetServiceById), new { id = service.Id }, service);
+    //}
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateService([FromRoute] int id, [FromBody] Service service)
-    {
-        if (id != service.Id || !ModelState.IsValid)
-            return BadRequest();
+    //[HttpPut("{id}")]
+    //public async Task<IActionResult> UpdateService([FromRoute] int id, [FromBody] Service service)
+    //{
+    //    if (id != service.Id || !ModelState.IsValid)
+    //        return BadRequest();
 
-        var existingService = await _context.Services.FindAsync(id);
-        if (existingService == null)
-            return NotFound($"Service with ID {id} not found.");
+    //    var existingService = await _context.Services.FindAsync(id);
+    //    if (existingService == null)
+    //        return NotFound($"Service with ID {id} not found.");
 
-        _context.Entry(service).State = EntityState.Modified;
+    //    _context.Entry(service).State = EntityState.Modified;
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!_context.Services.Any(s => s.Id == id))
-                return NotFound($"Service with ID {id} not found.");
-            throw;
-        }
+    //    try
+    //    {
+    //        await _context.SaveChangesAsync();
+    //    }
+    //    catch (DbUpdateConcurrencyException)
+    //    {
+    //        if (!_context.Services.Any(s => s.Id == id))
+    //            return NotFound($"Service with ID {id} not found.");
+    //        throw;
+    //    }
 
-        return NoContent();
-    }
-
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteService([FromRoute] int id)
-    {
-        var service = await _context.Services.FindAsync(id);
-        if (service == null)
-            return NotFound($"Service with ID {id} not found.");
-
-        _context.Services.Remove(service);
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
+    //    return NoContent();
+    //}
 }

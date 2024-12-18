@@ -46,57 +46,57 @@ public class PetServiceProviderController : Controller
         return Ok(provider);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateProvider([FromBody] PetServiceProvider provider)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+    //[HttpPost]
+    //public async Task<IActionResult> CreateProvider([FromBody] PetServiceProvider provider)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
 
-        _context.PetServiceProviders.Add(provider);
-        await _context.SaveChangesAsync();
+    //    _context.PetServiceProviders.Add(provider);
+    //    await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetProviderById), new { id = provider.Id }, provider);
-    }
+    //    return CreatedAtAction(nameof(GetProviderById), new { id = provider.Id }, provider);
+    //}
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateProvider([FromRoute] int id, [FromBody] PetServiceProvider provider)
-    {
-        if (id != provider.Id || !ModelState.IsValid)
-            return BadRequest("Provider ID mismatch or invalid data.");
+    ////[HttpPut("{id}")]
+    ////public async Task<IActionResult> UpdateProvider([FromRoute] int id, [FromBody] PetServiceProvider provider)
+    ////{
+    ////    if (id != provider.Id || !ModelState.IsValid)
+    ////        return BadRequest("Provider ID mismatch or invalid data.");
 
-        var existingProvider = await _context.PetServiceProviders.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
-        if (existingProvider == null)
-            return NotFound($"Provider with ID {id} not found.");
+    ////    var existingProvider = await _context.PetServiceProviders.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+    ////    if (existingProvider == null)
+    ////        return NotFound($"Provider with ID {id} not found.");
 
-        _context.Entry(provider).State = EntityState.Modified;
+    ////    _context.Entry(provider).State = EntityState.Modified;
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!_context.PetServiceProviders.Any(c => c.Id == id))
-                return NotFound($"Provider with ID {id} not found.");
-            throw;
-        }
+    ////    try
+    ////    {
+    ////        await _context.SaveChangesAsync();
+    ////    }
+    ////    catch (DbUpdateConcurrencyException)
+    ////    {
+    ////        if (!_context.PetServiceProviders.Any(c => c.Id == id))
+    ////            return NotFound($"Provider with ID {id} not found.");
+    ////        throw;
+    ////    }
 
-        return NoContent();
-    }
+    ////    return NoContent();
+    ////}
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProvider([FromRoute] int id)
-    {
-        var provider = await _context.PetServiceProviders.FindAsync(id);
+    ////[HttpDelete("{id}")]
+    ////public async Task<IActionResult> DeleteProvider([FromRoute] int id)
+    ////{
+    ////    var provider = await _context.PetServiceProviders.FindAsync(id);
 
-        if (provider == null)
-            return NotFound($"Provider with ID {id} not found.");
+    ////    if (provider == null)
+    ////        return NotFound($"Provider with ID {id} not found.");
 
-        _context.PetServiceProviders.Remove(provider);
-        await _context.SaveChangesAsync();
+    ////    _context.PetServiceProviders.Remove(provider);
+    ////    await _context.SaveChangesAsync();
 
-        return NoContent();
-    }
+    ////    return NoContent();
+    ////}
 
 
     [HttpGet("provider/{id}/services")]
