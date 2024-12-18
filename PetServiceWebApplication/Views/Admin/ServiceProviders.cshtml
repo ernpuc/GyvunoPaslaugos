@@ -102,6 +102,28 @@
                     });
                     $('#providerTable tbody').html(providerRows);
 
+                    $('#providerTable a.delete-link').css({
+                        "color": "red",
+                        "font-weight": "bold",
+                        "text-decoration": "none",
+                        "cursor": "pointer"
+                    });
+
+                    $('#providerTable a.delete-link').hover(
+                        function () {
+                            $(this).css({
+                                "color": "darkred",
+                                "text-decoration": "underline"
+                            });
+                        },
+                        function () {
+                            $(this).css({
+                                "color": "red",
+                                "text-decoration": "none"
+                            });
+                        }
+                    );
+
                     $('#noProvidersMessage').hide();
                     $('#tableContainer').show();
                 },

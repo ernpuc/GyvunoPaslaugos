@@ -121,6 +121,25 @@ a[href*="ManageProvider"] {
         transform: translateY(-2px);
     }
 
+table#providerTable a.delete-link {
+    all: unset;
+    color: red !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+    table#providerTable a.delete-link:hover {
+        color: darkred !important;
+        text-decoration: underline !important;
+    }
+
+
+
+
+
+
 @media (max-width: 768px) {
     .admin-container {
         grid-template-columns: 1fr; 
