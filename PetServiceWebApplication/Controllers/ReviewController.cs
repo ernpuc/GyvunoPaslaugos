@@ -86,42 +86,42 @@ public class ReviewController : Controller
         return CreatedAtAction(nameof(GetReviewById), new { id = review.Id }, review);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateReview([FromRoute] int id, [FromBody] Review review)
-    {
-        if (id != review.Id || !ModelState.IsValid)
-            return BadRequest();
+    //[HttpPut("{id}")]
+    //public async Task<IActionResult> UpdateReview([FromRoute] int id, [FromBody] Review review)
+    //{
+    //    if (id != review.Id || !ModelState.IsValid)
+    //        return BadRequest();
 
-        var existingReview = await _context.Reviews.FindAsync(id);
-        if (existingReview == null)
-            return NotFound($"Review with ID {id} not found.");
+    //    var existingReview = await _context.Reviews.FindAsync(id);
+    //    if (existingReview == null)
+    //        return NotFound($"Review with ID {id} not found.");
 
-        _context.Entry(review).State = EntityState.Modified;
+    //    _context.Entry(review).State = EntityState.Modified;
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!_context.Reviews.Any(r => r.Id == id))
-                return NotFound($"Review with ID {id} not found.");
-            throw;
-        }
+    //    try
+    //    {
+    //        await _context.SaveChangesAsync();
+    //    }
+    //    catch (DbUpdateConcurrencyException)
+    //    {
+    //        if (!_context.Reviews.Any(r => r.Id == id))
+    //            return NotFound($"Review with ID {id} not found.");
+    //        throw;
+    //    }
 
-        return NoContent();
-    }
+    //    return NoContent();
+    //}
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteReview([FromRoute] int id)
-    {
-        var review = await _context.Reviews.FindAsync(id);
-        if (review == null)
-            return NotFound($"Review with ID {id} not found.");
+    //[HttpDelete("{id}")]
+    //public async Task<IActionResult> DeleteReview([FromRoute] int id)
+    //{
+    //    var review = await _context.Reviews.FindAsync(id);
+    //    if (review == null)
+    //        return NotFound($"Review with ID {id} not found.");
 
-        _context.Reviews.Remove(review);
-        await _context.SaveChangesAsync();
+    //    _context.Reviews.Remove(review);
+    //    await _context.SaveChangesAsync();
 
-        return NoContent();
-    }
+    //    return NoContent();
+    //}
 }

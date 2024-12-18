@@ -64,14 +64,14 @@ namespace PetServiceWebApplication.Controllers
             return Ok(new { success = true, message = "Provider added successfully." });
         }
 
-        [HttpGet("provider/{id}")]
-        public IActionResult GetProviderById(int id)
-        {
-            var provider = _context.PetServiceProviders.Find(id);
-            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
-            return Ok(provider);
-        }
+        //[HttpGet("provider/{id}")]
+        //public IActionResult GetProviderById(int id)
+        //{
+        //    var provider = _context.PetServiceProviders.Find(id);
+        //    if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
+        //        return NotFound();
+        //    return Ok(provider);
+        //}
 
         [HttpGet("providers")]
         public IActionResult GetProvidersForAdmin()
@@ -193,12 +193,6 @@ namespace PetServiceWebApplication.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            //var existingService = _context.Services
-            //    .Include(s => s.PetServiceProvider)
-            //    .FirstOrDefault(s => s.Id == id);
-            //if (existingService == null || existingService.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
-            //    return NotFound();
-
             _context.Entry(service).State = EntityState.Modified;
 
             try
@@ -239,34 +233,34 @@ namespace PetServiceWebApplication.Controllers
             return Ok(new { message = "Service and associated bookings deleted successfully." });
         }
 
-        [HttpGet("bookings/provider/{providerId}")]
-        public IActionResult GetBookingsByProvider(int providerId)
-        {
-            var provider = _context.PetServiceProviders
-                .Include(p => p.Services)
-                .ThenInclude(s => s.Bookings)
-                .FirstOrDefault(p => p.Id == providerId);
-            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
+        //[HttpGet("bookings/provider/{providerId}")]
+        //public IActionResult GetBookingsByProvider(int providerId)
+        //{
+        //    var provider = _context.PetServiceProviders
+        //        .Include(p => p.Services)
+        //        .ThenInclude(s => s.Bookings)
+        //        .FirstOrDefault(p => p.Id == providerId);
+        //    if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
+        //        return NotFound();
 
-            var bookings = provider.Services.SelectMany(s => s.Bookings).ToList();
-            return Ok(bookings);
-        }
+        //    var bookings = provider.Services.SelectMany(s => s.Bookings).ToList();
+        //    return Ok(bookings);
+        //}
 
-        [HttpPut("booking/cancel/{bookingId}")]
-        public IActionResult CancelBooking(int bookingId)
-        {
-            var booking = _context.Bookings
-                .Include(b => b.Service)
-                .ThenInclude(s => s.PetServiceProvider)
-                .FirstOrDefault(b => b.Id == bookingId);
-            if (booking == null || booking.Service.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
+        //[HttpPut("booking/cancel/{bookingId}")]
+        //public IActionResult CancelBooking(int bookingId)
+        //{
+        //    var booking = _context.Bookings
+        //        .Include(b => b.Service)
+        //        .ThenInclude(s => s.PetServiceProvider)
+        //        .FirstOrDefault(b => b.Id == bookingId);
+        //    if (booking == null || booking.Service.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
+        //        return NotFound();
 
-            booking.IsCompleted = false;
-            _context.SaveChanges();
-            return NoContent();
-        }
+        //    booking.IsCompleted = false;
+        //    _context.SaveChanges();
+        //    return NoContent();
+        //}
 
         [HttpGet("ManageProvider/{id}")]
         public async Task<IActionResult> GetProviderWithServices(int id)

@@ -34,7 +34,10 @@
                 <h5>@service.Name</h5>
                 <p>@service.Description</p>
                 <p><strong>Price:</strong> @service.Price €</p>
-                <a href="/api/Booking/book/service/@service.Id" class="btn btn-primary">Book service</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a href="/api/Booking/book/service/@service.Id" class="btn btn-primary">Book service</a>
+                }
             </div>
         }
     </div>
@@ -70,18 +73,20 @@
         }
     </div>
 
-    <div class="add-review">
-        <h3 class="section-header">Add a New Review</h3>
-        <div class="form-group">
-            <label for="newRating">Rating (1-5):</label>
-            <input type="number" id="newRating" class="form-control" min="1" max="5" required />
+    @if (SignInManager.IsSignedIn(User)){
+        <div class="add-review">
+            <h3 class="section-header">Add a New Review</h3>
+            <div class="form-group">
+                <label for="newRating">Rating (1-5):</label>
+                <input type="number" id="newRating" class="form-control" min="1" max="5" required />
+            </div>
+            <div class="form-group">
+                <label for="newComment">Comment:</label>
+                <textarea id="newComment" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="button" id="submitReviewBtn" class="btn submit-btn">Submit Review</button>
         </div>
-        <div class="form-group">
-            <label for="newComment">Comment:</label>
-            <textarea id="newComment" class="form-control" rows="3" required></textarea>
-        </div>
-        <button type="button" id="submitReviewBtn" class="btn submit-btn">Submit Review</button>
-    </div>
+    }
 </div>
 
 
