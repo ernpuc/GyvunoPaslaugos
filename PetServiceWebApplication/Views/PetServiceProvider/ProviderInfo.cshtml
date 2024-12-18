@@ -62,7 +62,7 @@
                         <tr>
                             <td>@review.Comment</td>
                             <td>@review.Rating</td>
-                            <td>@review.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@review.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
                         </tr>
                     }
                 </tbody>

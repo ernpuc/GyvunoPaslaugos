@@ -121,14 +121,45 @@ namespace PetServiceWebApplication.Controllers
         [HttpDelete("provider/delete/{id}")]
         public IActionResult DeleteProvider(int id)
         {
-            var provider = _context.PetServiceProviders.Find(id);
-            if (provider == null || provider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
+            var provider = _context.PetServiceProviders
+                                   .Include(p => p.Services)
+                                       .ThenInclude(s => s.Bookings) 
+                                   .Include(p => p.Reviews)
+                                   .FirstOrDefault(p => p.Id == id);
+
+            if (provider == null)
+            {
+                return NotFound(new { message = "Provider not found." });
+            }
+
+            // Delete Bookings for each Service
+            foreach (var service in provider.Services)
+            {
+                if (service.Bookings != null && service.Bookings.Any())
+                {
+                    _context.Bookings.RemoveRange(service.Bookings);
+                }
+            }
+
+            // Delete related Services
+            if (provider.Services != null && provider.Services.Any())
+            {
+                _context.Services.RemoveRange(provider.Services);
+            }
+
+            // Delete related Reviews
+            if (provider.Reviews != null && provider.Reviews.Any())
+            {
+                _context.Reviews.RemoveRange(provider.Reviews);
+            }
 
             _context.PetServiceProviders.Remove(provider);
+
             _context.SaveChanges();
-            return NoContent();
+
+            return Ok(new { message = "Provider and all related entities deleted successfully." });
         }
+
 
         [HttpPost("service/add")]
         public IActionResult AddService([FromBody] Service service)
@@ -189,14 +220,23 @@ namespace PetServiceWebApplication.Controllers
         public IActionResult DeleteService(int id)
         {
             var service = _context.Services
-                .Include(s => s.PetServiceProvider)
-                .FirstOrDefault(s => s.Id == id);
-            if (service == null || service.PetServiceProvider.ApplicationUserId != GetCurrentUserId())
-                return NotFound();
+                                  .Include(s => s.Bookings)
+                                  .FirstOrDefault(s => s.Id == id);
+
+            if (service == null)
+            {
+                return NotFound(new { message = "Service not found." });
+            }
+
+            if (service.Bookings != null && service.Bookings.Any())
+            {
+                _context.Bookings.RemoveRange(service.Bookings);
+            }
 
             _context.Services.Remove(service);
             _context.SaveChanges();
-            return NoContent();
+
+            return Ok(new { message = "Service and associated bookings deleted successfully." });
         }
 
         [HttpGet("bookings/provider/{providerId}")]
