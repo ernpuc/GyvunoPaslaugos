@@ -126,6 +126,18 @@
         text-decoration: underline;
     }
 
+.delete-link {
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+    .delete-link:hover {
+        color: darkred;
+        text-decoration: underline;
+    }
+
 @media (max-width: 768px) {
     .admin-grid {
         grid-template-columns: 1fr;

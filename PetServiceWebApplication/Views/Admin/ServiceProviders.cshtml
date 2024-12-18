@@ -19,6 +19,7 @@
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Manage</th>
+                        <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +96,7 @@
                                 <td>${provider.phone}</td>
                                 <td>${provider.email}</td>
                                 <td><a href = "${manageProviderUrl}">Manage</a></td>
+                                <td><a href="#" class="delete-link" data-id="${provider.id}">Remove</a></td>
                             </tr>
                         `;
                     });
@@ -148,6 +150,25 @@
                     alert("Error adding provider.");
                 }
             });
+        });
+
+        $(document).on('click', '.delete-link', function (event) {
+            event.preventDefault();
+            const providerId = $(this).data('id');
+
+            if (confirm("Are you sure you want to delete this provider?")) {
+                $.ajax({
+                    url: `/api/admin/provider/delete/${providerId}`,
+                    type: 'DELETE',
+                    success: function (response) {
+                        alert(response.message);
+                        loadServiceProviders(); 
+                    },
+                    error: function () {
+                        alert("Error deleting provider.");
+                    }
+                });
+            }
         });
     });
 </script>

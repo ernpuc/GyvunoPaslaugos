@@ -34,6 +34,7 @@
                 <h5>@service.Name</h5>
                 <p>@service.Description</p>
                 <p><strong>Price:</strong> @service.Price €</p>
+                <a href="/api/Booking/book/service/@service.Id" class="btn btn-primary">Book service</a>
             </div>
         }
     </div>
@@ -61,7 +62,7 @@
                         <tr>
                             <td>@review.Comment</td>
                             <td>@review.Rating</td>
-                            <td>@review.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>@review.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
                         </tr>
                     }
                 </tbody>
