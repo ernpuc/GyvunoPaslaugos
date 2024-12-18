@@ -1,36 +1,48 @@
 ﻿@model IEnumerable<PetServiceWebApplication.Models.Booking>
-
-<h1>Your Bookings</h1>
-
-@if (Model.Any())
-{
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Provider</th>
-                <th>Service</th>
-                <th>Service Date</th>
-                <th>Service Time</th>
-                <th>Booking Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var booking in Model)
-            {
-                <tr>
-                    <td><a href="@Url.Action("GetProviderWithServices", "PetServiceProvider", new { id = booking.Service.PetServiceProviderId })">View</a></td>
-                    <td>@booking.Service.Name</td>
-                    <td>@booking.RequestedServiceDate.ToShortDateString()</td>
-                    <td>@booking.RequestedServiceTime</td>
-                    <td>@booking.BookingDate.ToShortDateString()</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@{
+    ViewData["Title"] = "My bookings";
 }
-else
-{
-    <div class="alert alert-info">
-        You have no bookings yet.
-    </div>
-}
+<link rel="stylesheet" href="~/css/bookings.css" />
+
+<div class="container py-5">
+    <h1 class="page-header">Your Bookings</h1>
+
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table bookings-table table-hover">
+                <thead>
+                    <tr>
+                        <th>Provider</th>
+                        <th>Service</th>
+                        <th>Service Date</th>
+                        <th>Service Time</th>
+                        <th>Booking Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var booking in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("GetProviderWithServices", "PetServiceProvider", new { id = booking.Service.PetServiceProviderId })"
+                                   class="provider-link">View</a>
+                            </td>
+                            <td>@booking.Service.Name</td>
+                            <td>@booking.RequestedServiceDate.ToShortDateString()</td>
+                            <td>@booking.RequestedServiceTime</td>
+                            <td>@booking.BookingDate.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center mt-4">
+            You have no bookings yet.
+        </div>
+    }
+</div>
+
