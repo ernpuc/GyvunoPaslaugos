@@ -28,17 +28,24 @@
 
     <div class="services-list">
         <h2 class="section-header">Services</h2>
-        @foreach (var service in Model.Services)
+        @if (!Model.Services.Any())
         {
-            <div class="service-card">
-                <h5>@service.Name</h5>
-                <p>@service.Description</p>
-                <p><strong>Price:</strong> @service.Price €</p>
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <a href="/api/Booking/book/service/@service.Id" class="btn btn-primary">Book service</a>
-                }
-            </div>
+            <p>No services yet.</p>
+        }
+        else
+        {
+            @foreach (var service in Model.Services)
+            {
+                <div class="service-card">
+                    <h5>@service.Name</h5>
+                    <p>@service.Description</p>
+                    <p><strong>Price:</strong> @service.Price €</p>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <a href="/api/Booking/book/service/@service.Id" class="btn btn-primary">Book service</a>
+                    }
+                </div>
+            }
         }
     </div>
 
